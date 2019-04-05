@@ -8,34 +8,27 @@ import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.routing.post
 import no.nav.modiapersonoversikt.model.UserSetting
+import no.nav.modiapersonoversikt.storage.DataCache
+import no.nav.modiapersonoversikt.storage.S3StorageProvider
 
-private val cache: MutableMap<String, MutableMap<String, Any>> = mutableMapOf()
+private val cache = DataCache(S3StorageProvider())
 
 fun Routing.settingsRoutes() {
     post("/innstillinger/{navident}") {
         val ident = call.parameters["navident"] ?: call.respond(HttpStatusCode.BadRequest)
-        addToCache(ident as String, call.receive())
+        cache.addToCache(ident as String, call.receive())
         call.respond(HttpStatusCode.OK)
     }
 
     get("/innstillinger/{navident}") {
         val ident = call.parameters["navident"] ?: call.respond(HttpStatusCode.BadRequest)
-        call.respond(getFromCache(ident as String))
+        call.respond(cache.getFromCache(ident as String))
     }
 
     get("/innstillinger/{navident}/{innstilling}") {
         val ident = call.parameters["navident"] ?: call.respond(HttpStatusCode.BadRequest)
         val settingKey = call.parameters["innstilling"] ?: call.respond(HttpStatusCode.BadRequest)
-        val setting = getFromCache(ident as String, settingKey as String) ?: call.respond(HttpStatusCode.NotFound)
+        val setting = cache.getFromCache(ident as String, settingKey as String) ?: call.respond(HttpStatusCode.NotFound)
         call.respond(setting)
     }
 }
-
-fun addToCache(ident: String, setting: UserSetting) {
-    val settingsMap = cache.getOrPut(ident) { mutableMapOf() }
-    settingsMap[setting.key] = setting.value
-}
-
-fun getFromCache(ident: String): MutableMap<String, Any> = cache.getOrDefault(ident, mutableMapOf())
-
-fun getFromCache(ident: String, settingsKey: String): Any? = cache[ident]?.get(settingsKey)

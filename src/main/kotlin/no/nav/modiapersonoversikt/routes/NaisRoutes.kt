@@ -36,6 +36,4 @@ fun Routing.naisRoutes(readinessCheck: () -> Boolean,
             TextFormat.write004(this, collectorRegistry.filteredMetricFamilySamples(names))
         }
     }
-
-
 }
