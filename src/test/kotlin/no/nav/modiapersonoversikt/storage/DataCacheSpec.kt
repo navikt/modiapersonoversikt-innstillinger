@@ -27,7 +27,7 @@ object DataCacheSpec : Spek({
 
     describe("data cache cache") {
         on("add single setting to one user") {
-            dataCache = DataCache(StorageProviderTestImpl())
+            dataCache = DataCache(TestStorageProvider())
             dataCache.addToCache(IDENT1, SETTING1)
 
             it("should find value for ident1") {
@@ -57,7 +57,7 @@ object DataCacheSpec : Spek({
         }
 
         on("add several settings to one user") {
-            dataCache = DataCache(StorageProviderTestImpl())
+            dataCache = DataCache(TestStorageProvider())
             dataCache.addToCache(IDENT1, SETTING1)
             dataCache.addToCache(IDENT1, SETTING2)
 
@@ -73,7 +73,7 @@ object DataCacheSpec : Spek({
         }
 
         on("overwriting setting for a user") {
-            dataCache = DataCache(StorageProviderTestImpl())
+            dataCache = DataCache(TestStorageProvider())
             dataCache.addToCache(IDENT1, SETTING1)
             dataCache.addToCache(IDENT1, SETTING1_ALT)
 

@@ -1,6 +1,6 @@
 package no.nav.modiapersonoversikt.storage
 
-class StorageProviderTestImpl : StorageProvider {
+class TestStorageProvider : StorageProvider {
     override fun loadData(): MutableMap<String, MutableMap<String, Any>> {
         return mutableMapOf()
     }
