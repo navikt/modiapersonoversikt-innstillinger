@@ -1,7 +1,9 @@
 package no.nav.modiapersonoversikt
 
 import io.ktor.application.install
+import io.ktor.features.ContentNegotiation
 import io.ktor.features.StatusPages
+import io.ktor.gson.gson
 import io.ktor.routing.routing
 import io.ktor.server.engine.ApplicationEngine
 import io.ktor.server.engine.embeddedServer
@@ -13,6 +15,13 @@ fun createHttpServer(applicationState: ApplicationState, port: Int = 7070): Appl
     install(StatusPages) {
         notFoundHandler()
         exceptionHandler()
+    }
+
+    install(ContentNegotiation) {
+        gson {
+            setPrettyPrinting()
+            disableHtmlEscaping()
+        }
     }
 
     routing {
