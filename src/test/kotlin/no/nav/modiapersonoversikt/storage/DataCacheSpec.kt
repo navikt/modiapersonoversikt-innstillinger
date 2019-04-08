@@ -25,8 +25,8 @@ private val SETTING2 = UserSetting(KEY_BOOL_VAL, BOOLEAN_VALUE)
 object DataCacheSpec : Spek({
     lateinit var dataCache: DataCache
 
-    describe("data cache cache") {
-        on("add single setting to one user") {
+    describe("a data cache") {
+        on("adding single setting to one user") {
             dataCache = DataCache(TestStorageProvider())
             dataCache.addToCache(IDENT1, SETTING1)
 
@@ -56,7 +56,7 @@ object DataCacheSpec : Spek({
             }
         }
 
-        on("add several settings to one user") {
+        on("adding several settings to one user") {
             dataCache = DataCache(TestStorageProvider())
             dataCache.addToCache(IDENT1, SETTING1)
             dataCache.addToCache(IDENT1, SETTING2)
