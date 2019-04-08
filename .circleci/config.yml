@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/modia
+    working_directory: ~/modiapersonoversikt-innstillinger
     docker:
       - image: circleci/openjdk:8-jdk
     environment:
@@ -19,3 +19,28 @@ jobs:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
           when: always
+      - run:
+          name: github creds
+          command: |
+            set -e
+            git clone https://github.com/navikt/github-apps-support.git
+            export PATH=`pwd`/github-apps-support/bin:$PATH
+            echo $PERSONOVERSIKTCI_KEY | tr '_' '\n' > personoversiktci.key
+            export GITHUB_APP_ID=23451
+            export GH_TOKEN=$(generate-installation-token.sh `generate-jwt.sh personoversiktci.key $GITHUB_APP_ID`)
+            echo -e "machine api.github.com login x-access-token password $GH_TOKEN" > ~/.netrc
+            rm personoversiktci.key
+      - run:
+          name: build and push new version
+          command: |
+            set -e
+            if [ -z "${CIRCLE_PULL_REQUEST}" ] && [ "${CIRCLE_BRANCH}" = "master" ]; then
+              export DOCKER_IMG_NAME=navikt/modiapersonoversikt-innstillinger
+              export RELEASE_VERSION="$(git fetch --unshallow || true && git rev-list --count $CIRCLE_SHA1)"
+
+              ./gradlew clean test fatJar
+              docker build . -t $DOCKER_IMG_NAME:$RELEASE_VERSION
+
+              echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
+              docker push $DOCKER_IMG_NAME:$RELEASE_VERSION
+            fi

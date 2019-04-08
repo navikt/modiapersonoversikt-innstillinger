@@ -1,3 +1,5 @@
+import org.gradle.jvm.tasks.Jar
+
 val ktorVersion = "1.1.3"
 val prometheusVersion = "0.4.0"
 val logbackVersion = "1.2.3"
@@ -59,4 +61,15 @@ java {
 
 tasks.withType<Wrapper> {
     gradleVersion = "4.9"
+}
+
+val fatJar = task("fatJar", type = Jar::class) {
+    baseName = "modiainnstillinger-all"
+    manifest {
+        attributes["Implementation-Title"] = "Modiapersonoversikt innstillinger"
+        attributes["Implementation-Version"] = "1.0"
+        attributes["Main-Class"] = mainClass
+    }
+    from(configurations.runtime.map({ if (it.isDirectory) it else zipTree(it) }))
+    with(tasks["jar"] as CopySpec)
 }
