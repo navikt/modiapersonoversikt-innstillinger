@@ -39,6 +39,7 @@ jobs:
             if [ -z "${CIRCLE_PULL_REQUEST}" ] && [ "${CIRCLE_BRANCH}" = "master" ]; then
               export DOCKER_IMG_NAME=navikt/modiapersonoversikt-innstillinger
               export RELEASE_VERSION="$(git fetch || true && git rev-list --count $CIRCLE_SHA1)"
+              export COMMIT_SHORT=$(git rev-parse --short HEAD)
 
               ./gradlew build jar
               docker build . -t $DOCKER_IMG_NAME:$RELEASE_VERSION
@@ -53,7 +54,7 @@ jobs:
               PREPROD_NAISERATOR=$(echo $PREPROD_NAISERATOR | jq '.spec.image = "'$DOCKER_IMG_NAME':'$RELEASE_VERSION'"' -c)
               PREPROD_DEPLOYMENT=$(cat deploy/deployreq.json | jq '.payload.kubernetes.resources += ['$PREPROD_NAISERATOR']')
               PREPROD_DEPLOYMENT=$(echo $PREPROD_DEPLOYMENT | jq '.environment = "preprod-fss"')
-              PREPROD_DEPLOYMENT=$(echo $PREPROD_DEPLOYMENT | jq '.ref = "'$RELEASE_VERSION'"')
+              PREPROD_DEPLOYMENT=$(echo $PREPROD_DEPLOYMENT | jq '.ref = "'$COMMIT_SHORT'"')
               curl -i -n \
                    -X POST \
                    -d "$PREPROD_DEPLOYMENT" \

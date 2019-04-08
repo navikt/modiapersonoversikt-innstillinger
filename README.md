@@ -39,6 +39,7 @@ Siden dette er en rimelig basic applikasjon er den et fint utgangspunkt for andr
  * Filen `deployreq.json` trenger ikke å endres. Det er bare formatet på requesten til deploy rutina, og den er felles for alle våre prosjekt
  * Filen `preprod.yaml` er naiserator-filen for preprod
  * Gjør endringer på `.circleci/config.yml` så man kan gjøre et deployment request
+ * `ref` må peke på en git ref. commit sha/tag/branch navn
  
 ### Sette opp vault
  * Er dokumentert [her](https://github.com/nais/doc/tree/master/content/secrets)
