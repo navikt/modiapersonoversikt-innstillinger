@@ -60,13 +60,3 @@ java {
 tasks.withType<Wrapper> {
     gradleVersion = "4.9"
 }
-
-val fatJar = task("fatJar", type = Jar::class) {
-    baseName = "modiainnstillinger-all"
-    manifest {
-        attributes["Implementation-Title"] = "Modiainnstillinger"
-        attributes["Main-Class"] = mainClass
-    }
-    from(configurations.runtime.map { if (it.isDirectory) it else zipTree(it) })
-    with(tasks["jar"] as CopySpec)
-}
