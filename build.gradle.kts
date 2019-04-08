@@ -60,7 +60,7 @@ java {
 }
 
 tasks.withType<Wrapper> {
-    gradleVersion = "4.9"
+    gradleVersion = "5.3.1"
 }
 
 val fatJar = task("fatJar", type = Jar::class) {
