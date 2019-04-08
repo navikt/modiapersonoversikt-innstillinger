@@ -18,6 +18,10 @@ Interne henvendelser kan sendes via Slack i kanalen #personoversikt-intern.
 ## Oppskrift for oppsett av nytt prosjekt
 Siden dette er en rimelig basic applikasjon er den et fint utgangspunkt for andre applikasjoner, så legger en oppskrift for å sette opp her.
 
+### Sette opp docker repo
+ * Logg deg inn på dockerhub og lag repo på navikt-organisasjonen
+ * Gi gruppen `bots` lov til å skrive og lese
+
 ### Sette opp circleci
  * Logg inn på circleci.com med github-kontoen din og gå til Apps
  * Gå inn på Add Projects og finn ditt github repo der
@@ -28,11 +32,13 @@ Siden dette er en rimelig basic applikasjon er den et fint utgangspunkt for andr
  * Legg til environmentvariabel DOCKER_PASSWORD. Få verdi av noen andre, Richard for eksempel
  * Utover det, sjekk det som står . `.circleci/config.yml` for inspirasjon
 
-### Sette opp naiserator
- * Er dokumentert [her](https://github.com/nais/doc/tree/master/content/deploy)
-
 ### Sette opp github deploy
- * Er dokumentert [her](https://github.com/navikt/deployment)
-
+ * Krever at applikasjonen bruker naiserator, dokumentert [her](https://github.com/nais/doc/tree/master/content/deploy)
+ * Github deployment er dokumentert [her](https://github.com/navikt/deployment)
+ * Opprett en mappe `deploy` og legg filer inn der. Se i mappen i dette prosjektet for eksempel
+ * Filen `deployreq.json` trenger ikke å endres. Det er bare formatet på requesten til deploy rutina, og den er felles for alle våre prosjekt
+ * Filen `preprod.yaml` er naiserator-filen for preprod
+ * Gjør endringer på `.circleci/config.yml` så man kan gjøre et deployment request
+ 
 ### Sette opp vault
  * Er dokumentert [her](https://github.com/nais/doc/tree/master/content/secrets)
