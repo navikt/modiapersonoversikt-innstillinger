@@ -1,4 +1,4 @@
-import org.gradle.jvm.tasks.Jar
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val ktorVersion = "1.1.3"
 val prometheusVersion = "0.4.0"
@@ -63,13 +63,29 @@ tasks.withType<Wrapper> {
     gradleVersion = "5.3.1"
 }
 
-val fatJar = task("fatJar", type = Jar::class) {
-    baseName = "modiainnstillinger-all"
+tasks.named<Jar>("jar") {
+    baseName = "app"
+
     manifest {
-        attributes["Implementation-Title"] = "Modiapersonoversikt innstillinger"
-        attributes["Implementation-Version"] = "1.0"
         attributes["Main-Class"] = mainClass
+        attributes["Class-Path"] = configurations["compile"].joinToString(separator = " ") {
+            it.name
+        }
     }
-    from(configurations.runtime.map({ if (it.isDirectory) it else zipTree(it) }))
-    with(tasks["jar"] as CopySpec)
+
+    doLast {
+        configurations["compile"].forEach {
+            val file = File("$buildDir/libs/${it.name}")
+            if (!file.exists())
+                it.copyTo(file)
+        }
+    }
+}
+
+tasks.named<KotlinCompile>("compileKotlin") {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+tasks.named<KotlinCompile>("compileTestKotlin") {
+    kotlinOptions.jvmTarget = "1.8"
 }
