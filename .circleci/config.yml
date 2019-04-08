@@ -38,7 +38,7 @@ jobs:
               export DOCKER_IMG_NAME=navikt/modiapersonoversikt-innstillinger
               export RELEASE_VERSION="$(git fetch --unshallow || true && git rev-list --count $CIRCLE_SHA1)"
 
-              ./gradlew clean test fatJar
+              ./gradlew build jar
               docker build . -t $DOCKER_IMG_NAME:$RELEASE_VERSION
 
               echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
