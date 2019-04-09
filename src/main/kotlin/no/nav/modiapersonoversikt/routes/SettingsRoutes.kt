@@ -11,9 +11,7 @@ import no.nav.modiapersonoversikt.model.UserSetting
 import no.nav.modiapersonoversikt.storage.DataCache
 import no.nav.modiapersonoversikt.storage.S3StorageProvider
 
-private val cache = DataCache(S3StorageProvider())
-
-fun Routing.settingsRoutes() {
+fun Routing.settingsRoutes(cache: DataCache) {
     post("/innstillinger/{navident}") {
         val ident = call.parameters["navident"] ?: call.respond(HttpStatusCode.BadRequest)
         cache.addToCache(ident as String, call.receive())

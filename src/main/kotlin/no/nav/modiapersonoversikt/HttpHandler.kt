@@ -10,8 +10,11 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import no.nav.modiapersonoversikt.routes.naisRoutes
 import no.nav.modiapersonoversikt.routes.settingsRoutes
+import no.nav.modiapersonoversikt.storage.DataCache
+import no.nav.modiapersonoversikt.storage.S3StorageProvider
+import no.nav.modiapersonoversikt.storage.StorageProvider
 
-fun createHttpServer(applicationState: ApplicationState, port: Int = 7070): ApplicationEngine = embeddedServer(Netty, port) {
+fun createHttpServer(applicationState: ApplicationState, port: Int = 7070, storageProvider: StorageProvider = S3StorageProvider()): ApplicationEngine = embeddedServer(Netty, port) {
     install(StatusPages) {
         notFoundHandler()
         exceptionHandler()
@@ -26,7 +29,7 @@ fun createHttpServer(applicationState: ApplicationState, port: Int = 7070): Appl
 
     routing {
         naisRoutes(readinessCheck = { applicationState.initialized }, livenessCheck = { applicationState.running })
-        settingsRoutes()
+        settingsRoutes(DataCache(storageProvider))
     }
 
     applicationState.initialized = true

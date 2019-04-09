@@ -4,6 +4,8 @@ val ktorVersion = "1.1.3"
 val prometheusVersion = "0.4.0"
 val logbackVersion = "1.2.3"
 val logstashVersion = "5.1"
+val amazonS3Version = "1.11.534"
+val konfigVersion = "1.6.10.0"
 
 val junitJupiterVersion = "5.3.0"
 val spekVersion = "1.2.1"
@@ -34,6 +36,8 @@ dependencies {
     compile("io.prometheus:simpleclient_common:$prometheusVersion")
     compile("ch.qos.logback:logback-classic:$logbackVersion")
     compile("net.logstash.logback:logstash-logback-encoder:$logstashVersion")
+    compile("com.amazonaws:aws-java-sdk:$amazonS3Version")
+    compile("com.natpryce:konfig:$konfigVersion")
 
     testCompile("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
     testCompile("org.junit.jupiter:junit-jupiter-params:$junitJupiterVersion")
