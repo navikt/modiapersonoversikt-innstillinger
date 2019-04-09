@@ -19,7 +19,7 @@ Interne henvendelser kan sendes via Slack i kanalen #personoversikt-intern.
 Siden dette er en rimelig basic applikasjon er den et fint utgangspunkt for andre applikasjoner, så legger en oppskrift for å sette opp her.
 
 ### Sette opp docker repo
- * Logg deg inn på dockerhub og lag repo på navikt-organisasjonen
+ * Logg deg inn på dockerhub og lag repo på navikt-organisasjonen med samme navn som github repo
  * Gi gruppen `bots` lov til å skrive og lese
 
 ### Sette opp circleci
