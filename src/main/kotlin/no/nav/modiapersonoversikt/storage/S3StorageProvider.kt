@@ -1,5 +1,9 @@
 package no.nav.modiapersonoversikt.storage
 
+import no.nav.modiapersonoversikt.Configuration
+
+private val configuration = Configuration()
+
 class S3StorageProvider : StorageProvider {
     override fun loadData(): MutableMap<String, MutableMap<String, Any>> {
         return mutableMapOf()
