@@ -44,3 +44,8 @@ Siden dette er en rimelig basic applikasjon er den et fint utgangspunkt for andr
  
 ### Sette opp vault
  * Er dokumentert [her](https://github.com/nais/doc/tree/master/content/secrets)
+ * Lag en PR til vault-iac
+ * Vent på godkjenning
+ * Logg inn på [vault](https://vault.adeo.no)
+ * Legg inn secrets der under riktig path her er det `modiapersonoversikt-innstillinger/default`
+ * Når man bruker naiserator så får man secrets inn automagisk

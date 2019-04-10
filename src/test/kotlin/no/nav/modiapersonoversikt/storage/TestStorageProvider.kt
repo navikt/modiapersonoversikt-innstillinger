@@ -9,4 +9,7 @@ class TestStorageProvider : StorageProvider {
 
     }
 
+    override fun clearData() {
+
+    }
 }

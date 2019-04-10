@@ -4,4 +4,6 @@ interface StorageProvider {
     fun loadData(): MutableMap<String, MutableMap<String, Any>>
 
     fun storeData(data: MutableMap<String, MutableMap<String, Any>>)
+
+    fun clearData()
 }
