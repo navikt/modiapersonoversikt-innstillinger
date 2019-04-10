@@ -48,4 +48,4 @@ Siden dette er en rimelig basic applikasjon er den et fint utgangspunkt for andr
  * Vent på godkjenning
  * Logg inn på [vault](https://vault.adeo.no)
  * Legg inn secrets der under riktig path her er det `modiapersonoversikt-innstillinger/default`
- * Når man bruker naiserator så får man secrets inn automagisk
+ * Secrets må legges inn som properties filer, det vil si key er filnavn og value er innholdet på properties-format (KEY=VALUE), dersom man bruker `<filename>.env` som KEY og navikt sitt java baseimage på docker vil alle env-filer sources og variablene gå rett inn i containeren 
