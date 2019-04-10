@@ -47,7 +47,12 @@ class S3StorageProvider : StorageProvider {
         getOrCreateBucket()
     }
 
-    private fun getOrCreateBucket(): Bucket = s3.listBuckets().filter { b -> b.name == BUCKET_NAME }[0] ?:
-        s3.createBucket(CreateBucketRequest(BUCKET_NAME).withCannedAcl(CannedAccessControlList.Private))
-
+    private fun getOrCreateBucket(): Bucket {
+        val bucketList = s3.listBuckets().filter { b -> b.name == BUCKET_NAME }
+        return if (bucketList.isNotEmpty()) {
+            bucketList[0]
+        } else {
+            s3.createBucket(CreateBucketRequest(BUCKET_NAME).withCannedAcl(CannedAccessControlList.Private))
+        }
+    }
 }
