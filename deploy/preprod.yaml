@@ -35,7 +35,8 @@ spec:
   prometheus:
     enabled: true
     path: /metrics
-  secrets: true
+  vault:
+    enabled: true
   env:
     - name: S3_URL
       value: s3.nais.preprod.local
