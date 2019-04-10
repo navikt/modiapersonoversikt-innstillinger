@@ -1,6 +1,9 @@
 package no.nav.modiapersonoversikt
 
 import com.natpryce.konfig.*
+import java.io.File
+
+private const val VAULT_APPLICATION_PROPERTIES_PATH = "/var/run/secrets/nais.io/vault/application.properties"
 
 private val defaultProperties = ConfigurationMap(
         mapOf(
@@ -17,4 +20,7 @@ data class Configuration(
         val s3SecretKey: String = config()[Key("S3_SECRET_KEY", stringType)]
 )
 
-private fun config() = ConfigurationProperties.systemProperties() overriding EnvironmentVariables overriding defaultProperties
+private fun config() = ConfigurationProperties.systemProperties() overriding
+        EnvironmentVariables overriding
+        ConfigurationProperties.fromFile(File(VAULT_APPLICATION_PROPERTIES_PATH)) overriding
+        defaultProperties
