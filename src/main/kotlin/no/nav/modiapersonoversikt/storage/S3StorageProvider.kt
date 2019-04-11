@@ -28,7 +28,6 @@ class S3StorageProvider : StorageProvider {
                 .enablePathStyleAccess()
                 .withCredentials(AWSStaticCredentialsProvider(credentials)).build()
         createBucketAndEmptyObjectIfMissing()
-        storeData(mutableMapOf())
     }
 
     override fun loadData(): MutableMap<String, MutableMap<String, Any>> =

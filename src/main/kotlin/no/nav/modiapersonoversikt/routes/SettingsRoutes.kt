@@ -9,9 +9,7 @@ import io.ktor.routing.delete
 import io.ktor.routing.get
 import io.ktor.routing.post
 import no.nav.modiapersonoversikt.configuration
-import no.nav.modiapersonoversikt.model.UserSetting
 import no.nav.modiapersonoversikt.storage.DataCache
-import no.nav.modiapersonoversikt.storage.S3StorageProvider
 
 fun Routing.settingsRoutes(cache: DataCache) {
     post("/innstillinger/{navident}") {
@@ -36,7 +34,7 @@ fun Routing.settingsRoutes(cache: DataCache) {
         if (configuration.clusterName == "prod-fss") {
             call.respond(HttpStatusCode.Forbidden)
         }
-        cache.clearWholeCache()
+        cache.clearAllData()
         call.respond(HttpStatusCode.OK)
     }
 

@@ -13,8 +13,6 @@ import io.ktor.server.netty.Netty
 import no.nav.modiapersonoversikt.routes.naisRoutes
 import no.nav.modiapersonoversikt.routes.settingsRoutes
 import no.nav.modiapersonoversikt.storage.DataCache
-import no.nav.modiapersonoversikt.storage.S3StorageProvider
-import no.nav.modiapersonoversikt.storage.StorageProvider
 import org.slf4j.event.Level
 
 fun createHttpServer(applicationState: ApplicationState, cache: DataCache, port: Int = 7070): ApplicationEngine = embeddedServer(Netty, port) {

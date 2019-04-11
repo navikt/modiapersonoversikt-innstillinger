@@ -21,7 +21,7 @@ class DataCache(private val provider: StorageProvider) {
         return map.remove(settingsKey) != null
     }
 
-    fun clearWholeCache() {
+    fun clearAllData() {
         cache.clear()
         provider.clearData()
     }
