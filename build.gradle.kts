@@ -7,10 +7,6 @@ val logstashVersion = "5.1"
 val amazonS3Version = "1.11.534"
 val konfigVersion = "1.6.10.0"
 
-val junitJupiterVersion = "5.3.0"
-val spekVersion = "1.2.1"
-val kluentVersion = "1.42"
-
 val mainClass = "no.nav.modiapersonoversikt.ApplicationKt"
 
 plugins {
@@ -38,18 +34,6 @@ dependencies {
     compile("net.logstash.logback:logstash-logback-encoder:$logstashVersion")
     compile("com.amazonaws:aws-java-sdk:$amazonS3Version")
     compile("com.natpryce:konfig:$konfigVersion")
-
-    testCompile("org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion")
-    testCompile("org.junit.jupiter:junit-jupiter-params:$junitJupiterVersion")
-    testRuntime("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
-    testCompile("org.amshove.kluent:kluent:$kluentVersion")
-    testCompile("org.jetbrains.spek:spek-api:$spekVersion") {
-        exclude(group = "org.jetbrains.kotlin")
-    }
-    testRuntime("org.jetbrains.spek:spek-junit-platform-engine:$spekVersion") {
-        exclude(group = "org.junit.platform")
-        exclude(group = "org.jetbrains.kotlin")
-    }
 }
 
 repositories {
@@ -59,8 +43,8 @@ repositories {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
 tasks.withType<Wrapper> {

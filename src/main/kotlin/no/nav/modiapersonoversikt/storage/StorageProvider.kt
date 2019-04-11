@@ -1,9 +1,11 @@
 package no.nav.modiapersonoversikt.storage
 
+import no.nav.modiapersonoversikt.model.UserSettings
+
 interface StorageProvider {
-    fun loadData(): MutableMap<String, MutableMap<String, Any>>
+    fun getData(ident: String): UserSettings?
 
-    fun storeData(data: MutableMap<String, MutableMap<String, Any>>)
+    fun storeData(ident: String, data: UserSettings)
 
-    fun clearData()
+    fun clearData(ident: String)
 }

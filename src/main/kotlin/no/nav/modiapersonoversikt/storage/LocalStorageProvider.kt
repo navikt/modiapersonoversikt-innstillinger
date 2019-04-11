@@ -1,17 +1,21 @@
 package no.nav.modiapersonoversikt.storage
 
+import no.nav.modiapersonoversikt.model.UserSettings
+
 class LocalStorageProvider : StorageProvider {
 
-    override fun loadData(): MutableMap<String, MutableMap<String, Any>> {
-        return mutableMapOf()
+    val cache: MutableMap<String, UserSettings> = mutableMapOf()
+
+    override fun getData(ident: String): UserSettings? {
+        return cache[ident]
     }
 
-    override fun storeData(data: MutableMap<String, MutableMap<String, Any>>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun storeData(ident: String, data: UserSettings) {
+        cache[ident] = data
     }
 
-    override fun clearData() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun clearData(ident: String) {
+        cache.remove(ident)
     }
 
 }

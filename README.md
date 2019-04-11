@@ -1,6 +1,28 @@
 # Saksbehandlerinnstillinger for modiapersonoversikt
 En tjeneste for å ta vare på saksbehandlerinnstillinger for modiapersonoversikt.
 
+## Ruter
+ * GET `innstillinger/{navident}`
+ * POST `innstillinger/{navident}`
+ * DELETE `innstillinger/{navident}`
+
+## Format på data
+Tar imot og leverer innstillinger på dette formatet:
+```
+{
+	"innstillinger": [
+		{
+			"navn": "innstillingsnavn1",
+			"verdi": "verdi"
+		},
+		{
+			"navn": "innstillingsnavn2",
+			"verdi": "verdi"
+		}
+	]
+}
+```
+
 ## Kjøre lokal
 `LocalRun.kt` inneholder main-metode for kjøring lokalt
 
