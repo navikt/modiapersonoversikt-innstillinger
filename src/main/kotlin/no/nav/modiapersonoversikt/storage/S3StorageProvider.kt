@@ -6,7 +6,6 @@ import no.nav.modiapersonoversikt.configuration
 import com.amazonaws.auth.AWSStaticCredentialsProvider
 import com.amazonaws.client.builder.AwsClientBuilder
 import com.amazonaws.services.s3.AmazonS3ClientBuilder
-import com.amazonaws.services.s3.model.Bucket
 import com.amazonaws.services.s3.model.CannedAccessControlList
 import com.amazonaws.services.s3.model.CreateBucketRequest
 import com.google.gson.GsonBuilder
@@ -28,13 +27,13 @@ class S3StorageProvider : StorageProvider {
                 .withEndpointConfiguration(AwsClientBuilder.EndpointConfiguration(configuration.s3Url, configuration.s3Region))
                 .enablePathStyleAccess()
                 .withCredentials(AWSStaticCredentialsProvider(credentials)).build()
-        getOrCreateBucket()
+        createBucketAndEmptyObjectIfMissing()
     }
 
-    override fun loadData(): MutableMap<String, MutableMap<String, Any>> {
-        val s3Object = s3.getObject(BUCKET_NAME, BUCKET_KEY) ?: return mutableMapOf()
-        return gson.fromJson(InputStreamReader(s3Object.objectContent), object : TypeToken<MutableMap<String, MutableMap<String, Any>>>(){}.type)
-    }
+    override fun loadData(): MutableMap<String, MutableMap<String, Any>> =
+            gson.fromJson(InputStreamReader(s3.getObject(BUCKET_NAME, BUCKET_KEY).objectContent),
+                    object : TypeToken<MutableMap<String, MutableMap<String, Any>>>(){}.type)
+
 
     override fun storeData(data: MutableMap<String, MutableMap<String, Any>>) {
         val start = System.currentTimeMillis()
@@ -44,15 +43,14 @@ class S3StorageProvider : StorageProvider {
 
     override fun clearData() {
         s3.deleteBucket(BUCKET_NAME)
-        getOrCreateBucket()
+        createBucketAndEmptyObjectIfMissing()
     }
 
-    private fun getOrCreateBucket(): Bucket {
+    private fun createBucketAndEmptyObjectIfMissing() {
         val bucketList = s3.listBuckets().filter { b -> b.name == BUCKET_NAME }
-        return if (bucketList.isNotEmpty()) {
-            bucketList[0]
-        } else {
+        if (bucketList.isEmpty()) {
             s3.createBucket(CreateBucketRequest(BUCKET_NAME).withCannedAcl(CannedAccessControlList.Private))
+            storeData(mutableMapOf())
         }
     }
 }
