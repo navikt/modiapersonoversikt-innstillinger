@@ -16,7 +16,10 @@ import no.nav.modiapersonoversikt.storage.S3StorageProvider
 import no.nav.modiapersonoversikt.storage.StorageProvider
 import org.slf4j.event.Level
 
-fun createHttpServer(applicationState: ApplicationState, provider: StorageProvider = S3StorageProvider(), port: Int = 7070): ApplicationEngine = embeddedServer(Netty, port) {
+fun createHttpServer(applicationState: ApplicationState,
+                     provider: StorageProvider = S3StorageProvider(),
+                     port: Int = 7070): ApplicationEngine = embeddedServer(Netty, port) {
+
     install(StatusPages) {
         notFoundHandler()
         exceptionHandler()
