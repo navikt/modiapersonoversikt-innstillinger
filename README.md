@@ -56,7 +56,7 @@ Siden dette er en rimelig basic applikasjon er den et fint utgangspunkt for andr
 
 ### Sette opp github deploy
  * Krever at applikasjonen bruker naiserator, dokumentert [her](https://github.com/nais/doc/tree/master/content/deploy)
- * Github deployment er dokumentert [her](https://github.com/navikt/deployment) (Husk å registrere team!)
+ * Github deployment er dokumentert [her](https://github.com/navikt/deployment) (Husk å registrere team [her](https://deployment.prod-sbs.nais.io/auth/login)!)
  * Opprett en mappe `deploy` og legg filer inn der. Se i mappen i dette prosjektet for eksempel
  * Filen `deployreq.json` trenger ikke å endres. Det er bare formatet på requesten til deploy rutina, og den er felles for alle våre prosjekt
  * Filen `preprod.yaml` er naiserator-filen for preprod
