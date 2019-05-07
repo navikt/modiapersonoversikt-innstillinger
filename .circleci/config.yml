@@ -20,7 +20,7 @@ jobs:
     docker:
       - image: circleci/openjdk:11-jdk
     environment:
-      TESTVALUE: tester
+      DOCKER_IMG_NAME: navikt/modiapersonoversikt-innstillinger
     steps:
       - checkout
       - setup_remote_docker
@@ -29,25 +29,17 @@ jobs:
             - v1-dependencies-{{ checksum "build.gradle.kts" }}
             - v1-dependencies-
       - run:
-          name: Set env
+          name: set release version
           command: |
-            echo 'export TEST_VERSION="$(git fetch || true && git rev-list --count $CIRCLE_SHA1)"' >> $BASH_ENV
+            echo 'export RELEASE_VERSION="$(git fetch || true && git rev-list --count $CIRCLE_SHA1)"' >> $BASH_ENV
             source $BASH_ENV
+      - run: gradle build jar
       - run:
-          name: build and push new docker image
+          name: build docker image
+          command: docker build . -t $DOCKER_IMG_NAME:$RELEASE_VERSION
+      - run:
+          name: push new docker image
           command: |
-            set -e
-            echo '$TESTVALUE'
-            echo '${TESTVALUE}'
-            echo '$TEST_VERSION'
-            echo '${TEST_VERSION}'
-
-            export DOCKER_IMG_NAME=navikt/modiapersonoversikt-innstillinger
-            export RELEASE_VERSION="$(git fetch || true && git rev-list --count $CIRCLE_SHA1)"
-
-            ./gradlew build jar
-            docker build . -t $DOCKER_IMG_NAME:$RELEASE_VERSION
-
             echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
             docker push $DOCKER_IMG_NAME:$RELEASE_VERSION
       - save_cache:
@@ -65,9 +57,7 @@ jobs:
           name: Create deployment request for development
           command: |
             set -e
-            echo '$TEST_VERSION'
-            echo '${TEST_VERSION}'
-            
+
             export RELEASE_VERSION="$(git fetch || true && git rev-list --count $CIRCLE_SHA1)"
             deployment-cli deploy create --environment=dev-fss --repository=navikt/modiapersonoversikt-innstillinger --team=personoversikt -r=deploy/preprod.yaml --version=$RELEASE_VERSION
 workflows:
