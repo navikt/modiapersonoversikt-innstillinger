@@ -19,6 +19,8 @@ jobs:
   release_artifact:
     docker:
       - image: circleci/openjdk:11-jdk
+    environment:
+      TESTVALUE: tester
     steps:
       - checkout
       - setup_remote_docker
@@ -27,9 +29,19 @@ jobs:
             - v1-dependencies-{{ checksum "build.gradle.kts" }}
             - v1-dependencies-
       - run:
+          name: Set env
+          command: |
+            echo 'export TEST_VERSION="$(git fetch || true && git rev-list --count $CIRCLE_SHA1)"' >> $BASH_ENV
+            source $BASH_ENV
+      - run:
           name: build and push new docker image
           command: |
             set -e
+            echo '$TESTVALUE'
+            echo '${TESTVALUE}'
+            echo '$TEST_VERSION'
+            echo '${TEST_VERSION}'
+
             export DOCKER_IMG_NAME=navikt/modiapersonoversikt-innstillinger
             export RELEASE_VERSION="$(git fetch || true && git rev-list --count $CIRCLE_SHA1)"
 
@@ -38,6 +50,11 @@ jobs:
 
             echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
             docker push $DOCKER_IMG_NAME:$RELEASE_VERSION
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle.kts" }}
+          when: always
   deploy:
     docker:
       - image: navikt/deployment-cli:v0.1.3
@@ -48,6 +65,9 @@ jobs:
           name: Create deployment request for development
           command: |
             set -e
+            echo '$TEST_VERSION'
+            echo '${TEST_VERSION}'
+            
             export RELEASE_VERSION="$(git fetch || true && git rev-list --count $CIRCLE_SHA1)"
             deployment-cli deploy create --environment=dev-fss --repository=navikt/modiapersonoversikt-innstillinger --team=personoversikt -r=deploy/preprod.yaml --version=$RELEASE_VERSION
 workflows:
