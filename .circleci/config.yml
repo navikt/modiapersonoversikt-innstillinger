@@ -10,10 +10,6 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "build.gradle.kts" }}
             - v1-dependencies-
-      - run:
-          name: Test setting
-          command: |
-            echo 'export MY_ENV_VAR="FOO"' >> $BASH_ENV
       - run: gradle build
       - save_cache:
           paths:
@@ -34,7 +30,7 @@ jobs:
           name: build and push new docker image
           command: |
             set -e
-            export DOCKER_IMG_NAME=navikt/modiapersonoversikt-notifikasjon
+            export DOCKER_IMG_NAME=navikt/modiapersonoversikt-innstillinger
             export RELEASE_VERSION="$(git fetch || true && git rev-list --count $CIRCLE_SHA1)"
             export COMMIT_SHORT=$(git rev-parse --short HEAD)
 
@@ -49,9 +45,6 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run:
-          name: Does this work
-          command: echo ${MY_ENV_VAR}
       - run:
           name: Create deployment request for development
           command: |
