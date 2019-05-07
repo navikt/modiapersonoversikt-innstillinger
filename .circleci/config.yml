@@ -10,6 +10,10 @@ jobs:
           keys:
             - v1-dependencies-{{ checksum "build.gradle.kts" }}
             - v1-dependencies-
+      - run:
+          name: Test setting
+          command: |
+            echo 'export MY_ENV_VAR="FOO"' >> $BASH_ENV
       - run: gradle build
       - save_cache:
           paths:
@@ -46,11 +50,14 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-        name: Create deployment request for development
-        command: |
-          set -e
-          export RELEASE_VERSION="$(git fetch || true && git rev-list --count $CIRCLE_SHA1)"
-          deployment-cli deploy create --environment=dev-fss --repository=navikt/modiapersonoversikt-innstillinger --team=personoversikt -r=deploy/preprod.yaml --version=$RELEASE_VERSION
+          name: Does this work
+          command: echo ${MY_ENV_VAR}
+      - run:
+          name: Create deployment request for development
+          command: |
+            set -e
+            export RELEASE_VERSION="$(git fetch || true && git rev-list --count $CIRCLE_SHA1)"
+            deployment-cli deploy create --environment=dev-fss --repository=navikt/modiapersonoversikt-innstillinger --team=personoversikt -r=deploy/preprod.yaml --version=$RELEASE_VERSION
 workflows:
   version: 2
   build_and_deploy:
