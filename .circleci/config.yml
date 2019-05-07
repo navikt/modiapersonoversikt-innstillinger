@@ -32,7 +32,6 @@ jobs:
             set -e
             export DOCKER_IMG_NAME=navikt/modiapersonoversikt-innstillinger
             export RELEASE_VERSION="$(git fetch || true && git rev-list --count $CIRCLE_SHA1)"
-            export COMMIT_SHORT=$(git rev-parse --short HEAD)
 
             ./gradlew build jar
             docker build . -t $DOCKER_IMG_NAME:$RELEASE_VERSION

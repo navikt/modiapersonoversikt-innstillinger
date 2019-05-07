@@ -4,9 +4,9 @@ metadata:
   name: modiapersonoversikt-innstillinger
   namespace: default
   labels:
-    team: personoversikt
+    team: {{team}}
 spec:
-  image: navikt/modiapersonoversikt-innstillinger:00
+  image: "navikt/modiapersonoversikt-innstillinger:{{version}}"
   port: 7070
   team: personoversikt
   liveness:
