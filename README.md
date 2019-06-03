@@ -40,6 +40,10 @@ Interne henvendelser kan sendes via Slack i kanalen #personoversikt-intern.
 ## Oppskrift for oppsett av nytt prosjekt
 Siden dette er en rimelig basic applikasjon er den et fint utgangspunkt for andre applikasjoner, så legger en oppskrift for å sette opp her.
 
+### Aktiver github deploy (begge disse må gjøres av en github admin)
+* Legg til `personoversikt-ci` (som er vår github app) tilgang til repoet
+* Legg til `NAV deployment` (github app)
+
 ### Sette opp docker repo
  * Logg deg inn på dockerhub og lag repo på navikt-organisasjonen med samme navn som github repo
  * Gi gruppen `bots` lov til å skrive og lese
@@ -49,14 +53,16 @@ Siden dette er en rimelig basic applikasjon er den et fint utgangspunkt for andr
  * Gå inn på Add Projects og finn ditt github repo der
  * Klikk på Set Up Project
  * Følg oppskriften for å starte å bygge
- * Legg til environmentvariabel PERSONOVERSIKTCI_KEY. Denne kan fåes av Richard, som sitter på den private nøkkelen. Denne må legges inn på en litt spesiell måte. Fordi circleci stripper linjeskift, må man legge inn sertifikatet med en erstatting for linjeskift og så endre dette når man leser inn.
+ * Legg til environmentvariabel GITHUB_APP_ID = 23451 (som er vår appid) 
+ * Legg til environmentvariabel GITHUB_APP_KEY_BASE64. Denne kan fåes av Richard, som sitter på den private nøkkelen. Denne må legges inn på en litt spesiell måte. Fordi circleci stripper linjeskift, må man legge inn sertifikatet med en erstatting for linjeskift og så endre dette når man leser inn.
  * Legg til environmentvariabel DOCKER_USERNAME med verdi `navikt`
  * Legg til environmentvariabel DOCKER_PASSWORD. Få verdi av noen andre, Richard for eksempel
- * Utover det, sjekk det som står . `.circleci/config.yml` for inspirasjon
+ * Utover det, sjekk det som står . `.circleci/config.yml` for inspirasjon vi bruker per i dag deployment-cli som er skrevet av Kevin Sillerud
 
 ### Sette opp github deploy
  * Krever at applikasjonen bruker naiserator, dokumentert [her](https://github.com/nais/doc/tree/master/content/deploy)
  * Github deployment er dokumentert [her](https://github.com/navikt/deployment) (Husk å registrere team [her](https://deployment.prod-sbs.nais.io/auth/login)!)
+ * Har du husket å registrere team [her](https://deployment.prod-sbs.nais.io/auth/login)?
  * Opprett en mappe `deploy` og legg filer inn der. Se i mappen i dette prosjektet for eksempel
  * Filen `deployreq.json` trenger ikke å endres. Det er bare formatet på requesten til deploy rutina, og den er felles for alle våre prosjekt
  * Filen `preprod.yaml` er naiserator-filen for preprod
