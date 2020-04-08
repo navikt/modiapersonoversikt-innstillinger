@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+val mainClass = "no.nav.modiapersonoversikt.ApplicationKt"
 val kotlinVersion = "1.3.70"
 val ktorVersion = "1.3.1"
 val prometheusVersion = "0.4.0"
@@ -7,8 +8,6 @@ val logbackVersion = "1.2.3"
 val logstashVersion = "5.1"
 val amazonS3Version = "1.11.534"
 val konfigVersion = "1.6.10.0"
-
-val mainClass = "no.nav.modiapersonoversikt.ApplicationKt"
 
 plugins {
     application
@@ -60,23 +59,17 @@ tasks.withType<Wrapper> {
     gradleVersion = "5.3.1"
 }
 
-tasks.named<Jar>("jar") {
+task<Jar>("fatJar") {
     baseName = "app"
 
     manifest {
         attributes["Main-Class"] = mainClass
-        attributes["Class-Path"] = configurations["compile"].joinToString(separator = " ") {
+        configurations.runtimeClasspath.get().joinToString(separator = " ") {
             it.name
         }
     }
-
-    doLast {
-        configurations["compile"].forEach {
-            val file = File("$buildDir/libs/${it.name}")
-            if (!file.exists())
-                it.copyTo(file)
-        }
-    }
+    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
+    with(tasks.jar.get() as CopySpec)
 }
 
 tasks.named<KotlinCompile>("compileKotlin") {
@@ -85,4 +78,10 @@ tasks.named<KotlinCompile>("compileKotlin") {
 
 tasks.named<KotlinCompile>("compileTestKotlin") {
     kotlinOptions.jvmTarget = "11"
+}
+
+tasks {
+    "jar" {
+        dependsOn("fatJar")
+    }
 }
