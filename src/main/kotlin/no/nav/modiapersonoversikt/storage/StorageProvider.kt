@@ -1,11 +1,12 @@
 package no.nav.modiapersonoversikt.storage
 
 import no.nav.modiapersonoversikt.model.UserSettings
+import no.nav.modiapersonoversikt.model.UserSettingsMap
 
 interface StorageProvider {
-    fun getData(ident: String): UserSettings?
+    suspend fun getData(ident: String): UserSettings
 
-    fun storeData(ident: String, data: UserSettings)
+    suspend fun storeData(ident: String, settings: UserSettingsMap): UserSettings
 
-    fun clearData(ident: String)
+    suspend fun clearData(ident: String): UserSettings
 }

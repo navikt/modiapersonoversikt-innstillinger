@@ -4,17 +4,18 @@ import com.natpryce.konfig.*
 
 private val defaultProperties = ConfigurationMap(
         mapOf(
-                "S3_URL" to "s3.nais.preprod.local",
-                "S3_REGION" to "us-east-1"
+                "NAIS_CLUSTER_NAME" to "local",
+                "DATABASE_JDBC_URL" to "jdbc:h2:mem:modiapersonoversikt-innstillinger;MODE=PostgreSQL;DB_CLOSE_DELAY=-1",
+//                "DATABASE_JDBC_URL" to "jdbc:h2:tcp://localhost:8090/./modiapersonoversikt-innstillinger",
+//                "DATABASE_JDBC_URL" to "jdbc:postgresql://localhost:5432/modiapersonoversikt-innstillinger",
+                "VAULT_MOUNTPATH" to ""
         )
 )
 
 data class Configuration(
         val clusterName: String = config()[Key("NAIS_CLUSTER_NAME", stringType)],
-        val s3Url: String = config()[Key("S3_URL", stringType)],
-        val s3Region: String = config()[Key("S3_REGION", stringType)],
-        val s3AccessKey: String = config()[Key("S3_ACCESS_KEY", stringType)],
-        val s3SecretKey: String = config()[Key("S3_SECRET_KEY", stringType)]
+        val jdbcUrl: String = config()[Key("DATABASE_JDBC_URL", stringType)],
+        val vaultMountpath: String = config()[Key("VAULT_MOUNTPATH", stringType)]
 )
 
 private fun config() = ConfigurationProperties.systemProperties() overriding
