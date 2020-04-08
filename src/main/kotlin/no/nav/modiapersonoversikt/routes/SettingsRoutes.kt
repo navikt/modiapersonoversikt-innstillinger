@@ -6,30 +6,24 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.*
-import no.nav.modiapersonoversikt.API_COUNTER
 import no.nav.modiapersonoversikt.storage.StorageProvider
 
-fun Routing.settingsRoutes(provider: StorageProvider) {
+fun Route.settingsRoutes(provider: StorageProvider) {
     route("/innstillinger/{navident}") {
 
         get {
-            API_COUNTER.labels("GET").inc()
             val ident = call.getNavident()
-            provider.getData(ident)?.let { call.respond(it) } ?: call.respond(HttpStatusCode.NotFound)
+            call.respond(provider.getData(ident))
         }
 
         post {
-            API_COUNTER.labels("POST").inc()
             val ident = call.getNavident()
-            provider.storeData(ident, call.receive())
-            call.respond(HttpStatusCode.OK)
+            call.respond(provider.storeData(ident, call.receive()))
         }
 
         delete {
-            API_COUNTER.labels("DELETE").inc()
             val ident = call.getNavident()
-            provider.clearData(ident)
-            call.respond(HttpStatusCode.OK)
+            call.respond(provider.clearData(ident))
         }
     }
 
