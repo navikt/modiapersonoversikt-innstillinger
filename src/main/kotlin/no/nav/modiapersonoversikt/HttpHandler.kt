@@ -73,7 +73,9 @@ fun createHttpServer(applicationState: ApplicationState,
     routing {
         route("modiapersonoversikt-innstillinger") {
             naisRoutes(readinessCheck = { applicationState.initialized }, livenessCheck = { applicationState.running })
-            settingsRoutes(storageProvider, useAuthentication)
+            route("/api") {
+                settingsRoutes(storageProvider, useAuthentication)
+            }
         }
     }
 
