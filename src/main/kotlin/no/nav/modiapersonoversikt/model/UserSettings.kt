@@ -1,5 +1,9 @@
 package no.nav.modiapersonoversikt.model
 
-data class UserSettings(val innstillinger: List<UserSetting>)
+import java.time.LocalDateTime
 
-data class UserSetting(val navn: String, val verdi: Any)
+data class UserSettings(
+        val sistLagret: LocalDateTime,
+        val innstillinger: UserSettingsMap
+)
+typealias UserSettingsMap = Map<String, String>
