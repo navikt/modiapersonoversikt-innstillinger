@@ -4,7 +4,7 @@ import org.slf4j.LoggerFactory
 
 private val log = LoggerFactory.getLogger("modiapersonoversikt-innstillinger.LocalRun")
 
-fun main() {
+fun runLocally(useAuthentication: Boolean) {
     val configuration = Configuration()
     val dbConfig = DataSourceConfiguration(configuration)
     val applicationState = ApplicationState()
@@ -15,7 +15,8 @@ fun main() {
             applicationState = applicationState,
             port = 7070,
             configuration = Configuration(),
-            dataSource = dbConfig.userDataSource()
+            dataSource = dbConfig.userDataSource(),
+            useAuthentication = useAuthentication
     )
 
     Runtime.getRuntime().addShutdownHook(Thread {
@@ -25,4 +26,8 @@ fun main() {
     })
 
     applicationServer.start(wait = true)
+}
+
+fun main() {
+    runLocally(true)
 }
