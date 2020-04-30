@@ -60,7 +60,7 @@ fun createHttpServer(applicationState: ApplicationState,
 
     install(CallLogging) {
         level = Level.INFO
-        filter { call -> call.request.path().startsWith("/modiapersonoversikt-innstillinger/innstillinger") }
+        filter { call -> call.request.path().startsWith("/modiapersonoversikt-innstillinger/api") }
         mdc("userId", JwtUtil::getSubject)
     }
 
