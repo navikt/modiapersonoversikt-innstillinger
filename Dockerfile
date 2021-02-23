@@ -1,3 +1,4 @@
-FROM navikt/java:11
+FROM navikt/java:11-appdynamics
+ENV APPD_ENABLED=true
 
-COPY build/libs/*.jar ./
+COPY build/libs/app.jar app.jar
