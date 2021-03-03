@@ -26,11 +26,13 @@ import org.slf4j.event.Level
 import javax.sql.DataSource
 import no.nav.modiapersonoversikt.JwtUtil.Companion as JwtUtil
 
-fun createHttpServer(applicationState: ApplicationState,
-                     configuration: Configuration,
-                     dataSource: DataSource,
-                     port: Int = 7070,
-                     useAuthentication: Boolean): ApplicationEngine = embeddedServer(Netty, port) {
+fun createHttpServer(
+    applicationState: ApplicationState,
+    configuration: Configuration,
+    dataSource: DataSource,
+    port: Int = 7070,
+    useAuthentication: Boolean
+): ApplicationEngine = embeddedServer(Netty, port) {
 
     install(StatusPages) {
         notFoundHandler()
