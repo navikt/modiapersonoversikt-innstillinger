@@ -9,7 +9,6 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.*
-import io.ktor.util.pipeline.PipelinePhase
 import no.nav.modiapersonoversikt.MockPayload
 import no.nav.modiapersonoversikt.storage.StorageProvider
 
@@ -31,22 +30,22 @@ fun Route.settingsRoutes(provider: StorageProvider, useAuthentication: Boolean) 
         route("/innstillinger") {
             get {
                 val response = call.getNavident()
-                        ?.let { ident -> provider.getData(ident) }
-                        ?: HttpStatusCode.BadRequest
+                    ?.let { ident -> provider.getData(ident) }
+                    ?: HttpStatusCode.BadRequest
                 call.respond(response)
             }
 
             post {
                 val response = call.getNavident()
-                        ?.let { ident -> provider.storeData(ident, call.receive()) }
-                        ?: HttpStatusCode.BadRequest
+                    ?.let { ident -> provider.storeData(ident, call.receive()) }
+                    ?: HttpStatusCode.BadRequest
                 call.respond(response)
             }
 
             delete {
                 val response = call.getNavident()
-                        ?.let { ident -> provider.clearData(ident) }
-                        ?: HttpStatusCode.BadRequest
+                    ?.let { ident -> provider.clearData(ident) }
+                    ?: HttpStatusCode.BadRequest
                 call.respond(response)
             }
         }
@@ -55,6 +54,6 @@ fun Route.settingsRoutes(provider: StorageProvider, useAuthentication: Boolean) 
 
 private fun ApplicationCall.getNavident(): String? {
     return this.principal<JWTPrincipal>()
-            ?.payload
-            ?.subject
+        ?.payload
+        ?.subject
 }
