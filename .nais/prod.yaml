@@ -30,8 +30,8 @@ spec:
       cpu: 2000m
       memory: 512Mi
   ingresses:
-    - https://modiapersonoversikt-innstillinger.nais.adeo.no
     - https://app.adeo.no/modiapersonoversikt-innstillinger
+    - https://modia.adeo.no/modiapersonoversikt-innstillinger
   replicas:
     min: 2
     max: 4

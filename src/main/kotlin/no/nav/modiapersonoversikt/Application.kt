@@ -13,17 +13,19 @@ fun main() {
     DataSourceConfiguration.migrateDb(dbConfig.adminDataSource())
 
     val applicationServer = createHttpServer(
-            applicationState = applicationState,
-            configuration = configuration,
-            dataSource = dbConfig.userDataSource(),
-            useAuthentication = true
+        applicationState = applicationState,
+        configuration = configuration,
+        dataSource = dbConfig.userDataSource(),
+        useAuthentication = true
     )
 
-    Runtime.getRuntime().addShutdownHook(Thread {
-        log.info("Shutdown hook called, shutting down gracefully")
-        applicationState.initialized = false
-        applicationServer.stop(5000, 5000)
-    })
+    Runtime.getRuntime().addShutdownHook(
+        Thread {
+            log.info("Shutdown hook called, shutting down gracefully")
+            applicationState.initialized = false
+            applicationServer.stop(5000, 5000)
+        }
+    )
 
     applicationServer.start(wait = true)
 }

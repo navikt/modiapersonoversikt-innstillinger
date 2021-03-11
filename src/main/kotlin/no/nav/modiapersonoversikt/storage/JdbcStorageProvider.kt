@@ -2,8 +2,8 @@ package no.nav.modiapersonoversikt.storage
 
 import kotliquery.Session
 import kotliquery.queryOf
-import no.nav.modiapersonoversikt.model.UserSettingsMap
 import no.nav.modiapersonoversikt.model.UserSettings
+import no.nav.modiapersonoversikt.model.UserSettingsMap
 import java.time.LocalDateTime
 import javax.sql.DataSource
 
@@ -21,12 +21,12 @@ class JdbcStorageProvider(private val dataSource: DataSource) : StorageProvider 
 
             settings.forEach { (navn, verdi) ->
                 tx.run(
-                        queryOf("INSERT INTO $innstillingerTable (ident, navn, verdi) VALUES(?, ?, ?)", ident, navn, verdi).asUpdate
+                    queryOf("INSERT INTO $innstillingerTable (ident, navn, verdi) VALUES(?, ?, ?)", ident, navn, verdi).asUpdate
                 )
             }
 
             tx.run(
-                    queryOf("INSERT INTO $sistOppdatertTable (ident) VALUES(?)", ident).asUpdate
+                queryOf("INSERT INTO $sistOppdatertTable (ident) VALUES(?)", ident).asUpdate
             )
 
             getData(tx, ident)
@@ -41,16 +41,16 @@ class JdbcStorageProvider(private val dataSource: DataSource) : StorageProvider 
     }
 
     private fun getData(tx: Session, ident: String): UserSettings {
-        val sistLagret : LocalDateTime = tx.run(
-                queryOf("SELECT tidspunkt FROM $sistOppdatertTable WHERE ident = ?", ident)
-                        .map { row ->  row.localDateTime("tidspunkt") }
-                        .asSingle
+        val sistLagret: LocalDateTime = tx.run(
+            queryOf("SELECT tidspunkt FROM $sistOppdatertTable WHERE ident = ?", ident)
+                .map { row -> row.localDateTime("tidspunkt") }
+                .asSingle
         ) ?: LocalDateTime.now()
 
         val innstillinger = tx.run(
-                queryOf("SELECT navn, verdi FROM $innstillingerTable WHERE ident = ?", ident)
-                        .map { row -> Pair(row.string("navn"), row.string("verdi")) }
-                        .asList
+            queryOf("SELECT navn, verdi FROM $innstillingerTable WHERE ident = ?", ident)
+                .map { row -> Pair(row.string("navn"), row.string("verdi")) }
+                .asList
         ).toMap()
 
         return UserSettings(sistLagret, innstillinger)
