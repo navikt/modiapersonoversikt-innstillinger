@@ -21,9 +21,10 @@ private val log = LoggerFactory.getLogger("modiapersonoversikt-skrivestotte.JwtC
 
 class JwtUtil {
     companion object {
+        val cookieNames = listOf("modia_ID_token", "ID_token")
         fun useJwtFromCookie(call: ApplicationCall): HttpAuthHeader? {
             return try {
-                val token = call.request.cookies["ID_token"]
+                val token = cookieNames.find { call.request.cookies[it].isNullOrEmpty() }
                 io.ktor.http.auth.parseAuthorizationHeader("Bearer $token")
             } catch (ex: Throwable) {
                 log.error("Illegal HTTP auth header", ex)
