@@ -32,8 +32,6 @@ spec:
   ingresses:
     - https://app-q0.adeo.no/modiapersonoversikt-innstillinger
     - https://app-q1.adeo.no/modiapersonoversikt-innstillinger
-    - https://modia-q0.dev.adeo.no/modiapersonoversikt-innstillinger
-    - https://modia-q1.dev.adeo.no/modiapersonoversikt-innstillinger
   replicas:
     min: 1
     max: 1
