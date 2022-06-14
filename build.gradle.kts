@@ -10,18 +10,11 @@ val amazonS3Version = "1.11.534"
 val konfigVersion = "1.6.10.0"
 
 plugins {
-    application
     kotlin("jvm") version "1.3.70"
 }
 
-buildscript {
-    dependencies {
-        classpath("org.junit.platform:junit-platform-gradle-plugin:1.2.0")
-    }
-}
-
-application {
-    mainClassName = mainClass
+repositories {
+    mavenCentral()
 }
 
 dependencies {
@@ -45,44 +38,27 @@ dependencies {
     testImplementation("com.h2database:h2:1.4.200")
 }
 
-repositories {
-    jcenter()
-    mavenCentral()
-    maven("https://dl.bintray.com/kotlin/ktor")
-}
-
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
 }
 
-tasks.withType<Wrapper> {
-    gradleVersion = "5.3.1"
+tasks.withType<KotlinCompile> {
+    kotlinOptions.jvmTarget = "11"
 }
 
 task<Jar>("fatJar") {
-    baseName = "app"
-
+    archiveBaseName.set("app")
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
     manifest {
         attributes["Main-Class"] = mainClass
-        configurations.runtimeClasspath.get().joinToString(separator = " ") {
-            it.name
-        }
     }
     from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
     with(tasks.jar.get() as CopySpec)
 }
 
-tasks.named<KotlinCompile>("compileKotlin") {
-    kotlinOptions.jvmTarget = "11"
-}
-
-tasks.named<KotlinCompile>("compileTestKotlin") {
-    kotlinOptions.jvmTarget = "11"
-}
-
 tasks {
-    "jar" {
+    "build" {
         dependsOn("fatJar")
     }
 }
