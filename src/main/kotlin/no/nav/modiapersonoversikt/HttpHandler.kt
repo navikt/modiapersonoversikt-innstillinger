@@ -1,39 +1,42 @@
 package no.nav.modiapersonoversikt
 
-import io.ktor.application.install
-import io.ktor.auth.Authentication
-import io.ktor.auth.jwt.jwt
-import io.ktor.features.CORS
-import io.ktor.features.CallLogging
-import io.ktor.features.ContentNegotiation
-import io.ktor.features.StatusPages
 import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
-import io.ktor.jackson.JacksonConverter
-import io.ktor.metrics.dropwizard.DropwizardMetrics
-import io.ktor.request.path
-import io.ktor.routing.route
-import io.ktor.routing.routing
+import io.ktor.serialization.jackson.*
+import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.server.engine.ApplicationEngine
 import io.ktor.server.engine.embeddedServer
+import io.ktor.server.metrics.micrometer.*
 import io.ktor.server.netty.Netty
-import io.prometheus.client.dropwizard.DropwizardExports
+import io.ktor.server.plugins.callloging.*
+import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.plugins.cors.routing.*
+import io.ktor.server.plugins.statuspages.*
+import io.ktor.server.request.*
+import io.ktor.server.routing.*
+import io.micrometer.prometheus.PrometheusConfig
+import io.micrometer.prometheus.PrometheusMeterRegistry
 import no.nav.modiapersonoversikt.ObjectMapperProvider.Companion.objectMapper
+import no.nav.modiapersonoversikt.infrastructure.Security
+import no.nav.modiapersonoversikt.infrastructure.SubjectPrincipal
+import no.nav.modiapersonoversikt.infrastructure.setupJWT
+import no.nav.modiapersonoversikt.infrastructure.setupMock
 import no.nav.modiapersonoversikt.routes.naisRoutes
 import no.nav.modiapersonoversikt.routes.settingsRoutes
 import no.nav.modiapersonoversikt.storage.JdbcStorageProvider
 import org.slf4j.event.Level
 import javax.sql.DataSource
-import no.nav.modiapersonoversikt.JwtUtil.Companion as JwtUtil
+
+val metricsRegistry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
 
 fun createHttpServer(
     applicationState: ApplicationState,
     configuration: Configuration,
     dataSource: DataSource,
     port: Int = 7070,
-    useAuthentication: Boolean
+    useMock: Boolean
 ): ApplicationEngine = embeddedServer(Netty, port) {
-
     install(StatusPages) {
         notFoundHandler()
         exceptionHandler()
@@ -41,18 +44,15 @@ fun createHttpServer(
 
     install(CORS) {
         anyHost()
-        method(HttpMethod.Post)
-        method(HttpMethod.Delete)
+        allowMethod(HttpMethod.Post)
+        allowMethod(HttpMethod.Delete)
     }
 
-    if (useAuthentication) {
-        install(Authentication) {
-            jwt {
-                authHeader(JwtUtil::useJwtFromCookie)
-                realm = "modiapersonoversikt-skrivestøtte"
-                verifier(configuration.jwksUrl, configuration.jwtIssuer)
-                validate { JwtUtil.validateJWT(it) }
-            }
+    install(Authentication) {
+        if (useMock) {
+            setupMock(principal = SubjectPrincipal("Z999999"))
+        } else {
+            setupJWT(configuration.jwksUrl, configuration.jwtIssuer)
         }
     }
 
@@ -63,11 +63,11 @@ fun createHttpServer(
     install(CallLogging) {
         level = Level.INFO
         filter { call -> call.request.path().startsWith("/modiapersonoversikt-innstillinger/api") }
-        mdc("userId", JwtUtil::getSubject)
+        mdc("userId", Security::getSubject)
     }
 
-    install(DropwizardMetrics) {
-        io.prometheus.client.CollectorRegistry.defaultRegistry.register(DropwizardExports(registry))
+    install(MicrometerMetrics) {
+        registry = metricsRegistry
     }
 
     val storageProvider = JdbcStorageProvider(dataSource)
@@ -76,7 +76,7 @@ fun createHttpServer(
         route("modiapersonoversikt-innstillinger") {
             naisRoutes(readinessCheck = { applicationState.initialized }, livenessCheck = { applicationState.running })
             route("/api") {
-                settingsRoutes(storageProvider, useAuthentication)
+                settingsRoutes(storageProvider)
             }
         }
     }
