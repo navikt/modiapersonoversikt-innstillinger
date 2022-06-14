@@ -6,7 +6,6 @@ val ktorVersion = "2.0.2"
 val prometheusVersion = "1.9.0"
 val logbackVersion = "1.2.11"
 val logstashVersion = "7.2"
-val konfigVersion = "1.6.10.0"
 
 plugins {
     kotlin("jvm") version "1.7.0"
@@ -37,7 +36,6 @@ dependencies {
     implementation("no.nav:vault-jdbc:1.3.9")
     implementation("org.flywaydb:flyway-core:8.5.12")
     implementation("com.github.seratch:kotliquery:1.8.0")
-    implementation("com.natpryce:konfig:$konfigVersion")
 
     testRuntimeOnly("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
     testImplementation("com.h2database:h2:2.1.212")
