@@ -43,6 +43,7 @@ object Security {
     fun getSubject(call: ApplicationCall): String {
         return try {
             getToken(call)
+                ?.let(Security::removeAuthScheme)
                 ?.let(JWT::decode)
                 ?.let(DecodedJWT::getSubject)
                 ?: "Unauthenticated"
@@ -73,6 +74,14 @@ object Security {
             log.error("Failed to validateJWT token", e)
             null
         }
+    }
+
+    private const val authscheme = "Bearer "
+    private fun removeAuthScheme(token: String): String {
+        if (token.startsWith(authscheme, ignoreCase = true)) {
+            return token.substring(authscheme.length)
+        }
+        return token
     }
 }
 
