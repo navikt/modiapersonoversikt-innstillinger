@@ -12,6 +12,7 @@ import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.callloging.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.cors.routing.*
+import io.ktor.server.plugins.forwardedheaders.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
@@ -37,6 +38,7 @@ fun createHttpServer(
     port: Int = 7070,
     useMock: Boolean
 ): ApplicationEngine = embeddedServer(Netty, port) {
+    install(ForwardedHeaders)
     install(StatusPages) {
         notFoundHandler()
         exceptionHandler()
@@ -62,6 +64,7 @@ fun createHttpServer(
 
     install(CallLogging) {
         level = Level.INFO
+        disableDefaultColors()
         filter { call -> call.request.path().startsWith("/modiapersonoversikt-innstillinger/api") }
         mdc("userId", Security::getSubject)
     }
