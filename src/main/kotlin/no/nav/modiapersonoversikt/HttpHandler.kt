@@ -38,7 +38,7 @@ fun createHttpServer(
     port: Int = 7070,
     useMock: Boolean
 ): ApplicationEngine = embeddedServer(Netty, port) {
-    install(ForwardedHeaders)
+    install(XForwardedHeaders)
     install(StatusPages) {
         notFoundHandler()
         exceptionHandler()
