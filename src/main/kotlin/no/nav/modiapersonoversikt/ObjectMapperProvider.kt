@@ -18,7 +18,7 @@ class ObjectMapperProvider {
                         indentObjectsWith(DefaultIndenter("  ", "\n"))
                     }
                 )
-                disableDefaultTyping()
+                deactivateDefaultTyping()
                 enable(SerializationFeature.INDENT_OUTPUT)
             }
     }

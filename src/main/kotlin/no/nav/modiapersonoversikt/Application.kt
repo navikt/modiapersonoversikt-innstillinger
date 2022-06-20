@@ -16,7 +16,7 @@ fun main() {
         applicationState = applicationState,
         configuration = configuration,
         dataSource = dbConfig.userDataSource(),
-        useAuthentication = true
+        useMock = false
     )
 
     Runtime.getRuntime().addShutdownHook(
