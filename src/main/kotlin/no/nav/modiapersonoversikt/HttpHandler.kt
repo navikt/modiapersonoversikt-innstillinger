@@ -21,8 +21,6 @@ import io.micrometer.prometheus.PrometheusMeterRegistry
 import no.nav.modiapersonoversikt.ObjectMapperProvider.Companion.objectMapper
 import no.nav.modiapersonoversikt.infrastructure.Security
 import no.nav.modiapersonoversikt.infrastructure.SubjectPrincipal
-import no.nav.modiapersonoversikt.infrastructure.setupJWT
-import no.nav.modiapersonoversikt.infrastructure.setupMock
 import no.nav.modiapersonoversikt.routes.naisRoutes
 import no.nav.modiapersonoversikt.routes.settingsRoutes
 import no.nav.modiapersonoversikt.storage.JdbcStorageProvider
@@ -50,13 +48,14 @@ fun createHttpServer(
         allowMethod(HttpMethod.Delete)
     }
 
+    val security = Security(
+        listOfNotNull(configuration.openam, configuration.azuread)
+    )
     install(Authentication) {
         if (useMock) {
-            setupMock(name = Security.OpenAM, principal = SubjectPrincipal("Z999999"))
-            setupMock(name = Security.AzureAD, principal = SubjectPrincipal("Z999999"))
+            security.setupMock(SubjectPrincipal("Z999999"))
         } else {
-            setupJWT(configuration.openam)
-            configuration.azuread?.let(::setupJWT)
+            security.setupJWT()
         }
     }
 
@@ -68,7 +67,7 @@ fun createHttpServer(
         level = Level.INFO
         disableDefaultColors()
         filter { call -> call.request.path().startsWith("/modiapersonoversikt-innstillinger/api") }
-        mdc("userId", Security::getSubject)
+        mdc("userId") { security.getSubject(it).joinToString(";") }
     }
 
     install(MicrometerMetrics) {
