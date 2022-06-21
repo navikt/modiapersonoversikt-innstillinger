@@ -52,9 +52,11 @@ fun createHttpServer(
 
     install(Authentication) {
         if (useMock) {
-            setupMock(principal = SubjectPrincipal("Z999999"))
+            setupMock(name = Security.OpenAM, principal = SubjectPrincipal("Z999999"))
+            setupMock(name = Security.AzureAD, principal = SubjectPrincipal("Z999999"))
         } else {
-            setupJWT(configuration.jwksUrl, configuration.jwtIssuer)
+            setupJWT(configuration.openam)
+            configuration.azuread?.let(::setupJWT)
         }
     }
 
@@ -79,7 +81,7 @@ fun createHttpServer(
         route("modiapersonoversikt-innstillinger") {
             naisRoutes(readinessCheck = { applicationState.initialized }, livenessCheck = { applicationState.running })
             route("/api") {
-                settingsRoutes(storageProvider)
+                settingsRoutes(configuration, storageProvider)
             }
         }
     }
