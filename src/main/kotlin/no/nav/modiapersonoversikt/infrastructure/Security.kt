@@ -3,13 +3,14 @@ package no.nav.modiapersonoversikt.infrastructure
 import com.auth0.jwk.JwkProvider
 import com.auth0.jwk.JwkProviderBuilder
 import com.auth0.jwt.JWT
-import com.auth0.jwt.interfaces.DecodedJWT
+import com.auth0.jwt.interfaces.Payload
 import io.ktor.http.*
 import io.ktor.http.auth.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
+import no.nav.modiapersonoversikt.AuthProviderConfig
 import org.slf4j.LoggerFactory
 import java.net.URL
 import java.util.concurrent.TimeUnit
@@ -25,18 +26,21 @@ fun AuthenticationConfig.setupMock(name: String? = null, principal: SubjectPrinc
     )
 }
 
-fun AuthenticationConfig.setupJWT(jwksUrl: String, jwtIssuer: String) {
-    jwt {
-        authHeader {
-            Security.getToken(it)?.let(::parseAuthorizationHeader)
+fun AuthenticationConfig.setupJWT(config: AuthProviderConfig) {
+    jwt(config.name) {
+        if (config.usesCookies) {
+            authHeader {
+                Security.getToken(it)?.let(::parseAuthorizationHeader)
+            }
         }
-        verifier(Security.makeJwkProvider(jwksUrl), jwtIssuer)
-        realm = "modiapersonoversikt-innstillinger"
+        verifier(Security.makeJwkProvider(config.jwksUrl))
         validate { Security.validateJWT(it) }
     }
 }
 
 object Security {
+    const val OpenAM = "openam"
+    const val AzureAD = "azuread"
     private val log = LoggerFactory.getLogger("modiapersonoversikt-innstillinger.Security")
     private val cookieNames = listOf("modia_ID_token", "ID_token")
 
@@ -45,7 +49,7 @@ object Security {
             getToken(call)
                 ?.let(Security::removeAuthScheme)
                 ?.let(JWT::decode)
-                ?.let(DecodedJWT::getSubject)
+                ?.getIdent()
                 ?: "Unauthenticated"
         } catch (e: Throwable) {
             "Invalid JWT"
@@ -69,11 +73,15 @@ object Security {
     internal fun validateJWT(credentials: JWTCredential): Principal? {
         return try {
             requireNotNull(credentials.payload.audience) { "Audience not present" }
-            SubjectPrincipal(credentials.payload.subject)
+            SubjectPrincipal(credentials.payload.getIdent())
         } catch (e: Exception) {
             log.error("Failed to validateJWT token", e)
             null
         }
+    }
+
+    private fun Payload.getIdent(): String {
+        return this.getClaim("NAVident")?.asString() ?: this.subject
     }
 
     private const val authscheme = "Bearer "

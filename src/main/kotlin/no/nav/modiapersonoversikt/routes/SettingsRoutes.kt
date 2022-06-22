@@ -6,11 +6,12 @@ import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import no.nav.modiapersonoversikt.Configuration
 import no.nav.modiapersonoversikt.infrastructure.SubjectPrincipal
 import no.nav.modiapersonoversikt.storage.StorageProvider
 
-fun Route.settingsRoutes(provider: StorageProvider) {
-    authenticate {
+fun Route.settingsRoutes(config: Configuration, provider: StorageProvider) {
+    authenticate(*config.authproviders) {
         route("/innstillinger") {
             get {
                 val response = call.getNavident()
@@ -37,6 +38,5 @@ fun Route.settingsRoutes(provider: StorageProvider) {
 }
 
 private fun ApplicationCall.getNavident(): String? {
-    return this.principal<SubjectPrincipal>()
-        ?.subject
+    return this.principal<SubjectPrincipal>()?.subject
 }
