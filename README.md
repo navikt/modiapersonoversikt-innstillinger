@@ -31,9 +31,6 @@ Spørsmål knyttet til koden eller prosjektet kan rettes mot:
 
 [Team Personoversikt](https://github.com/navikt/info-team-personoversikt)
 
-### For NAV-ansatte
-Interne henvendelser kan sendes via Slack i kanalen #personoversikt-intern.
-
 ## Oppskrift for oppsett av nytt prosjekt
 Siden dette er en rimelig basic applikasjon er den et fint utgangspunkt for andre applikasjoner, så legger en oppskrift for å sette opp her.
 
