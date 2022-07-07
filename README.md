@@ -29,13 +29,7 @@ Tar imot og leverer innstillinger på dette formatet:
 ## Henvendelser
 Spørsmål knyttet til koden eller prosjektet kan rettes mot:
 
--   Daniel Winsvold, daniel.winsvold@nav.no
--   Jan-Eirik B. Nævdal, jan.eirik.b.navdal@nav.no
--   Jørund Amsen, jorund.amsen@nav.no
--   Richard Borge, richard.borge@nav.no
-
-### For NAV-ansatte
-Interne henvendelser kan sendes via Slack i kanalen #personoversikt-intern.
+[Team Personoversikt](https://github.com/navikt/info-team-personoversikt)
 
 ## Oppskrift for oppsett av nytt prosjekt
 Siden dette er en rimelig basic applikasjon er den et fint utgangspunkt for andre applikasjoner, så legger en oppskrift for å sette opp her.
