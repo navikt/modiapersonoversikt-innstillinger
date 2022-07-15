@@ -1,9 +1,10 @@
 package no.nav.modiapersonoversikt
 
-import no.nav.modiapersonoversikt.infrastructure.Security
-import no.nav.modiapersonoversikt.utils.KotlinUtils.getConfig
-import no.nav.modiapersonoversikt.utils.KotlinUtils.getRequiredConfig
-import no.nav.modiapersonoversikt.utils.KotlinUtils.ifNotNull
+import no.nav.personoversikt.ktor.utils.Security.AuthCookie
+import no.nav.personoversikt.ktor.utils.Security.AuthProviderConfig
+import no.nav.personoversikt.utils.ConditionalUtils.ifNotNull
+import no.nav.personoversikt.utils.EnvUtils.getConfig
+import no.nav.personoversikt.utils.EnvUtils.getRequiredConfig
 
 private val defaultValues = mapOf(
     "NAIS_CLUSTER_NAME" to "local",
@@ -15,18 +16,6 @@ private val defaultValues = mapOf(
     "VAULT_MOUNTPATH" to ""
 )
 
-data class AuthProviderConfig(
-    val name: String,
-    val jwksUrl: String,
-    val issuer: String,
-    val cookies: List<AuthCookie> = emptyList(),
-)
-
-class AuthCookie(
-    val name: String,
-    val encryptedWithSecret: String? = null
-)
-
 data class DatabaseConfig(
     val jdbcUrl: String,
     val vaultMountpath: String,
@@ -35,29 +24,25 @@ data class DatabaseConfig(
 class Configuration(
     val clusterName: String = getRequiredConfig("NAIS_CLUSTER_NAME", defaultValues),
     val openam: AuthProviderConfig = AuthProviderConfig(
-        name = Security.OpenAM,
+        name = OpenAM,
         jwksUrl = getRequiredConfig("ISSO_JWKS_URL", defaultValues),
-        issuer = getRequiredConfig("ISSO_ISSUER", defaultValues),
-        cookies = listOf(AuthCookie("modia_ID_token", encryptedWithSecret = "my secret"), AuthCookie("ID_token"))
+        cookies = listOf(AuthCookie("modia_ID_token"), AuthCookie("ID_token"))
     ),
     val azuread: AuthProviderConfig? = ifNotNull(
         getConfig("AZURE_OPENID_CONFIG_JWKS_URI", defaultValues),
-        getConfig("AZURE_OPENID_CONFIG_ISSUER", defaultValues),
         getConfig("SECRET", defaultValues)
-    ) { jwksurl, issuer, secret ->
+    ) { jwksurl, secret ->
         AuthProviderConfig(
-            name = Security.AzureAD,
+            name = AzureAD,
             jwksUrl = jwksurl,
-            issuer = issuer,
             cookies = listOf(
                 AuthCookie(
                     name = "modiapersonoversikt_tokens",
-                    encryptedWithSecret = secret
+                    encryptionKey = secret
                 )
             )
         )
     },
-    val authproviders: Array<String> = listOfNotNull(openam.name, azuread?.name).toTypedArray(),
     val databaseConfig: DatabaseConfig = DatabaseConfig(
         jdbcUrl = getRequiredConfig("DATABASE_JDBC_URL", defaultValues),
         vaultMountpath = getRequiredConfig("VAULT_MOUNTPATH", defaultValues),
