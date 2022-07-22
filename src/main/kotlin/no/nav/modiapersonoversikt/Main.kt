@@ -3,7 +3,7 @@ package no.nav.modiapersonoversikt
 import io.ktor.server.netty.*
 import no.nav.personoversikt.ktor.utils.KtorServer
 
-fun runLocally(useMock: Boolean) {
+fun main() {
     val configuration = Configuration()
     val dbConfig = DataSourceConfiguration(configuration)
 
@@ -11,13 +11,9 @@ fun runLocally(useMock: Boolean) {
 
     KtorServer.create(Netty, 7070) {
         innstillingerApp(
-            configuration = Configuration(),
+            configuration = configuration,
             dataSource = dbConfig.userDataSource(),
-            useMock = useMock
+            useMock = false
         )
     }.start(wait = true)
-}
-
-fun main() {
-    runLocally(false)
 }

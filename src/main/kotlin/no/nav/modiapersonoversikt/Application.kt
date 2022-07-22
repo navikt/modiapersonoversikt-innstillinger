@@ -1,31 +1,84 @@
 package no.nav.modiapersonoversikt
 
-import org.slf4j.LoggerFactory
+import io.ktor.http.ContentType
+import io.ktor.http.HttpMethod
+import io.ktor.serialization.jackson.*
+import io.ktor.server.application.*
+import io.ktor.server.auth.*
+import io.ktor.server.plugins.callloging.*
+import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.plugins.cors.routing.*
+import io.ktor.server.plugins.forwardedheaders.*
+import io.ktor.server.plugins.statuspages.*
+import io.ktor.server.request.*
+import io.ktor.server.routing.*
+import no.nav.modiapersonoversikt.ObjectMapperProvider.Companion.objectMapper
+import no.nav.modiapersonoversikt.routes.settingsRoutes
+import no.nav.modiapersonoversikt.storage.JdbcStorageProvider
+import no.nav.personoversikt.ktor.utils.Metrics
+import no.nav.personoversikt.ktor.utils.Security
+import no.nav.personoversikt.ktor.utils.Selftest
+import org.slf4j.event.Level
+import javax.sql.DataSource
 
-private val log = LoggerFactory.getLogger("modiapersonoversikt-innstillinger.Application")
-data class ApplicationState(var running: Boolean = true, var initialized: Boolean = false)
+fun Application.innstillingerApp(
+    configuration: Configuration,
+    dataSource: DataSource,
+    useMock: Boolean
+) {
+    val security = Security(listOfNotNull(
+        configuration.openam,
+        configuration.azuread
+    ))
 
-fun main() {
-    val configuration = Configuration()
-    val dbConfig = DataSourceConfiguration(configuration)
-    val applicationState = ApplicationState()
+    install(XForwardedHeaders)
+    install(StatusPages) {
+        notFoundHandler()
+        exceptionHandler()
+    }
 
-    DataSourceConfiguration.migrateDb(dbConfig.adminDataSource())
+    install(CORS) {
+        anyHost()
+        allowMethod(HttpMethod.Post)
+        allowMethod(HttpMethod.Delete)
+    }
 
-    val applicationServer = createHttpServer(
-        applicationState = applicationState,
-        configuration = configuration,
-        dataSource = dbConfig.userDataSource(),
-        useMock = false
-    )
+    install(Metrics.Plugin) {
+        contextpath = appContextpath
+    }
 
-    Runtime.getRuntime().addShutdownHook(
-        Thread {
-            log.info("Shutdown hook called, shutting down gracefully")
-            applicationState.initialized = false
-            applicationServer.stop(5000, 5000)
+    install(Selftest.Plugin) {
+        appname = appName
+        contextpath = appContextpath
+        version = appImage
+    }
+
+    install(Authentication) {
+        if (useMock) {
+            security.setupMock(this, "Z999999")
+        } else {
+            security.setupJWT(this)
         }
-    )
+    }
 
-    applicationServer.start(wait = true)
+    install(ContentNegotiation) {
+        register(ContentType.Application.Json, JacksonConverter(objectMapper))
+    }
+
+    install(CallLogging) {
+        level = Level.INFO
+        disableDefaultColors()
+        filter { call -> call.request.path().startsWith("/modiapersonoversikt-innstillinger/api") }
+        mdc("userId") { security.getSubject(it).joinToString(";") }
+    }
+
+    val storageProvider = JdbcStorageProvider(dataSource)
+
+    routing {
+        route(appContextpath) {
+            route("/api") {
+                settingsRoutes(security.authproviders, storageProvider)
+            }
+        }
+    }
 }
