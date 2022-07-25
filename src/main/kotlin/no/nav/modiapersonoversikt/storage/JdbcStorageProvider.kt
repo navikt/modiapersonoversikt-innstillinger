@@ -1,16 +1,32 @@
 package no.nav.modiapersonoversikt.storage
 
+import kotlinx.coroutines.runBlocking
 import kotliquery.Session
 import kotliquery.queryOf
 import no.nav.modiapersonoversikt.model.UserSettings
 import no.nav.modiapersonoversikt.model.UserSettingsMap
+import no.nav.personoversikt.ktor.utils.Selftest
 import java.time.LocalDateTime
 import javax.sql.DataSource
+import kotlin.concurrent.fixedRateTimer
+import kotlin.time.Duration.Companion.seconds
 
 private const val innstillingerTable = "innstillinger"
 private const val sistOppdatertTable = "sist_oppdatert"
 
 class JdbcStorageProvider(private val dataSource: DataSource) : StorageProvider {
+    private val selftest = Selftest.Reporter("Database", true)
+
+    init {
+        fixedRateTimer("Database check", daemon = true, initialDelay = 0, period = 10.seconds.inWholeMilliseconds) {
+            runBlocking {
+                selftest.ping {
+                    getData("Z999999")
+                }
+            }
+        }
+    }
+
     override suspend fun getData(ident: String): UserSettings {
         return transactional(dataSource) { tx -> getData(tx, ident) }
     }
@@ -21,7 +37,12 @@ class JdbcStorageProvider(private val dataSource: DataSource) : StorageProvider 
 
             settings.forEach { (navn, verdi) ->
                 tx.run(
-                    queryOf("INSERT INTO $innstillingerTable (ident, navn, verdi) VALUES(?, ?, ?)", ident, navn, verdi).asUpdate
+                    queryOf(
+                        "INSERT INTO $innstillingerTable (ident, navn, verdi) VALUES(?, ?, ?)",
+                        ident,
+                        navn,
+                        verdi
+                    ).asUpdate
                 )
             }
 
