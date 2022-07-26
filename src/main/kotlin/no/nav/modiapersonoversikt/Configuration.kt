@@ -1,8 +1,8 @@
 package no.nav.modiapersonoversikt
 
-import no.nav.personoversikt.ktor.utils.Security.AuthCookie
+import io.ktor.http.*
+import no.nav.personoversikt.ktor.utils.Security
 import no.nav.personoversikt.ktor.utils.Security.AuthProviderConfig
-import no.nav.personoversikt.utils.ConditionalUtils.ifNotNull
 import no.nav.personoversikt.utils.EnvUtils.getConfig
 import no.nav.personoversikt.utils.EnvUtils.getRequiredConfig
 
@@ -25,24 +25,25 @@ class Configuration(
     val clusterName: String = getRequiredConfig("NAIS_CLUSTER_NAME", defaultValues),
     val openam: AuthProviderConfig = AuthProviderConfig(
         name = OpenAM,
-        jwksUrl = getRequiredConfig("ISSO_JWKS_URL", defaultValues),
-        cookies = listOf(AuthCookie("modia_ID_token"), AuthCookie("ID_token"))
+        jwksConfig = Security.JwksConfig.JwksUrl(
+            getRequiredConfig("ISSO_JWKS_URL", defaultValues),
+            getRequiredConfig("ISSO_ISSUER", defaultValues)
+        ),
+        tokenLocations = listOf(
+            Security.TokenLocation.Cookie(name = "modia_ID_token"),
+            Security.TokenLocation.Cookie(name = "ID_token")
+        )
     ),
-    val azuread: AuthProviderConfig? = ifNotNull(
-        getConfig("AZURE_OPENID_CONFIG_JWKS_URI", defaultValues),
-        getConfig("SECRET", defaultValues)
-    ) { jwksurl, secret ->
-        AuthProviderConfig(
-            name = AzureAD,
-            jwksUrl = jwksurl,
-            cookies = listOf(
-                AuthCookie(
-                    name = "modiapersonoversikt_tokens",
-                    encryptionKey = secret
+    val azuread: AuthProviderConfig? =
+        getConfig("AZURE_APP_WELL_KNOWN_URL", defaultValues)?.let { jwksurl ->
+            AuthProviderConfig(
+                name = AzureAD,
+                jwksConfig = Security.JwksConfig.OidcWellKnownUrl(jwksurl),
+                tokenLocations = listOf(
+                    Security.TokenLocation.Header(HttpHeaders.Authorization)
                 )
             )
-        )
-    },
+        },
     val databaseConfig: DatabaseConfig = DatabaseConfig(
         jdbcUrl = getRequiredConfig("DATABASE_JDBC_URL", defaultValues),
         vaultMountpath = getRequiredConfig("VAULT_MOUNTPATH", defaultValues),
