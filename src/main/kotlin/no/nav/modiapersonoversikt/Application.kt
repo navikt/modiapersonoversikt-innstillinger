@@ -27,7 +27,6 @@ fun Application.innstillingerApp(
     useMock: Boolean
 ) {
     val security = Security(listOfNotNull(
-        configuration.openam,
         configuration.azuread
     ))
 
