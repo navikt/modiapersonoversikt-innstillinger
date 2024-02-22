@@ -60,3 +60,5 @@ spec:
       value: "jdbc:postgresql://A01DBVL009.adeo.no:5432/modiapersonoversikt-innstillinger"
     - name: VAULT_MOUNTPATH
       value: "postgresql/prod-fss"
+    - name: DB_NAME
+      value: "modiapersonoversikt-innstillinger"
