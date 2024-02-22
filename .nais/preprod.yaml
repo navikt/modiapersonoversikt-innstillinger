@@ -8,7 +8,6 @@ metadata:
 spec:
   image: {{image}}
   port: 7070
-  team: personoversikt
   liveness:
     path: /modiapersonoversikt-innstillinger/internal/isAlive
     initialDelay: 20
