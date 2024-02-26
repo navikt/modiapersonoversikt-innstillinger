@@ -9,14 +9,14 @@ import no.nav.personoversikt.utils.EnvUtils.getRequiredConfig
 private val defaultValues = mapOf(
     "NAIS_CLUSTER_NAME" to "local",
     "DATABASE_JDBC_URL" to "jdbc:h2:mem:modiapersonoversikt-innstillinger;MODE=PostgreSQL;DB_CLOSE_DELAY=-1",
-//                "DATABASE_JDBC_URL" to "jdbc:h2:tcp://localhost:8090/./modiapersonoversikt-innstillinger",
-//                "DATABASE_JDBC_URL" to "jdbc:postgresql://localhost:5432/modiapersonoversikt-innstillinger",
-    "VAULT_MOUNTPATH" to ""
+    "VAULT_MOUNTPATH" to "",
+    "DB_NAME" to "modiapersonoversikt-innstillinger-pg15"
 )
 
 data class DatabaseConfig(
     val jdbcUrl: String,
     val vaultMountpath: String,
+    val dbName: String
 )
 
 class Configuration(
@@ -34,5 +34,6 @@ class Configuration(
     val databaseConfig: DatabaseConfig = DatabaseConfig(
         jdbcUrl = getRequiredConfig("DATABASE_JDBC_URL", defaultValues),
         vaultMountpath = getRequiredConfig("VAULT_MOUNTPATH", defaultValues),
+        dbName = getRequiredConfig("DB_NAME", defaultValues)
     )
 )

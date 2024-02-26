@@ -7,7 +7,7 @@ fun main() {
     val configuration = Configuration()
     val dbConfig = DataSourceConfiguration(configuration)
 
-    DataSourceConfiguration.migrateDb(dbConfig.adminDataSource())
+    DataSourceConfiguration.migrateDb(configuration, dbConfig.adminDataSource())
 
     KtorServer.create(Netty, 7070) {
         innstillingerApp(

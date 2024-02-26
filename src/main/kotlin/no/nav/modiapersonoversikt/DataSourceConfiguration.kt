@@ -1,5 +1,6 @@
 package no.nav.modiapersonoversikt
 
+import com.typesafe.config.ConfigResolver
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import no.nav.vault.jdbc.hikaricp.HikariCPVaultUtil
@@ -36,21 +37,21 @@ class DataSourceConfiguration(val env: Configuration) {
         return HikariCPVaultUtil.createHikariDataSourceWithVaultIntegration(
             config,
             mountPath,
-            dbRole(user)
+            dbRole(env.databaseConfig.dbName, user)
         )
     }
 
     companion object {
         private val log: Logger = LoggerFactory.getLogger(DataSourceConfiguration::class.java)
-        private fun dbRole(user: String): String = "modiapersonoversikt-innstillinger-$user"
+        private fun dbRole(dbName: String, user: String): String = "$dbName-$user"
 
-        fun migrateDb(dataSource: DataSource) {
+        fun migrateDb(configuration: Configuration, dataSource: DataSource) {
             Flyway
                 .configure()
                 .dataSource(dataSource)
                 .also {
                     if (dataSource is HikariDataSource && !dataSource.jdbcUrl.contains(":h2:")) {
-                        val dbUser = dbRole("admin")
+                        val dbUser = dbRole(configuration.databaseConfig.dbName, "admin")
                         it.initSql("SET ROLE '$dbUser'")
                     }
                 }
