@@ -68,7 +68,7 @@ dependencies {
     implementation("com.github.seratch:kotliquery:1.8.0")
 
     testRuntimeOnly("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
-    testImplementation("com.h2database:h2:2.1.212")
+    testImplementation("com.h2database:h2:2.2.224")
 }
 
 java {
