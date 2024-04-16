@@ -4,7 +4,7 @@ val mainClass = "no.nav.modiapersonoversikt.MainKt"
 val kotlinVersion = "1.7.10"
 val ktorVersion = "2.0.3"
 val prometheusVersion = "1.9.0"
-val logbackVersion = "1.2.11"
+val logbackVersion = "1.5.5"
 val logstashVersion = "7.2"
 val modiaCommonVersion = "1.2022.07.26-13.42-b5f759e4f887"
 
