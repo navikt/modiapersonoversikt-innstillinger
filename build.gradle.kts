@@ -7,6 +7,7 @@ val prometheusVersion = "1.12.5"
 val logbackVersion = "1.5.5"
 val logstashVersion = "7.2"
 val modiaCommonVersion = "1.2022.07.26-13.42-b5f759e4f887"
+val flywayVersion = "10.11.0"
 
 plugins {
     kotlin("jvm") version "1.9.23"
@@ -64,7 +65,8 @@ dependencies {
     implementation("no.nav.personoversikt:kotlin-utils:$modiaCommonVersion")
     implementation("no.nav.personoversikt:ktor-utils:$modiaCommonVersion")
     implementation("no.nav.personoversikt:crypto:$modiaCommonVersion")
-    implementation("org.flywaydb:flyway-core:10.11.0")
+    implementation("org.flywaydb:flyway-core:$flywayVersion")
+    implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
     implementation("com.github.seratch:kotliquery:1.8.0")
 
     testRuntimeOnly("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
