@@ -1,6 +1,9 @@
-FROM navikt/java:11-appdynamics
-ENV APPD_ENABLED=true
+FROM maven:3.9.6-eclipse-temurin-17-alpine as builder
 
-COPY java-debug.sh /init-scripts/08-java-debug.sh
+ADD / /source
+WORKDIR /source
+RUN ./gradlew build
 
-COPY build/libs/app.jar app.jar
+FROM ghcr.io/navikt/baseimages/temurin:17-appdynamics
+
+COPY --from=builder /source/build/libs/app.jar app.jar

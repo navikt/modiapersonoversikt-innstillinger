@@ -34,8 +34,6 @@ jobs:
       image: ${{ steps.docker-build-push.outputs.image }}
     steps:
       - uses: actions/checkout@v4
-      - name: Build
-        run: ./gradlew build
       - name: Publish Docker image
         uses: nais/docker-build-push@v0
         id: docker-build-push
