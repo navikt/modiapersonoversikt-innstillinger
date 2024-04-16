@@ -64,7 +64,7 @@ dependencies {
     implementation("no.nav.personoversikt:kotlin-utils:$modiaCommonVersion")
     implementation("no.nav.personoversikt:ktor-utils:$modiaCommonVersion")
     implementation("no.nav.personoversikt:crypto:$modiaCommonVersion")
-    implementation("org.flywaydb:flyway-core:8.5.12")
+    implementation("org.flywaydb:flyway-core:10.11.0")
     implementation("com.github.seratch:kotliquery:1.8.0")
 
     testRuntimeOnly("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
