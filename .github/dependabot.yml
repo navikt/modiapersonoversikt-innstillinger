@@ -4,11 +4,8 @@ updates:
     directory: "/"
     schedule:
       interval: daily
-    labels:
-      - "Dependencies"
+
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: daily
-    labels:
-      - "Dependencies"
