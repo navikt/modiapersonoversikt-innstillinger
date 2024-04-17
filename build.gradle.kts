@@ -67,7 +67,7 @@ dependencies {
     implementation("no.nav.personoversikt:crypto:$modiaCommonVersion")
     implementation("org.flywaydb:flyway-core:$flywayVersion")
     implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
-    implementation("com.github.seratch:kotliquery:1.8.0")
+    implementation("com.github.seratch:kotliquery:1.9.0")
 
     testRuntimeOnly("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
     testImplementation("com.h2database:h2:2.2.224")
