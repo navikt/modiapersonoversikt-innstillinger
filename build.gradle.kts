@@ -61,7 +61,7 @@ dependencies {
 
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashVersion")
-    implementation("no.nav:vault-jdbc:1.3.9")
+    implementation("no.nav:vault-jdbc:1.3.10")
     implementation("no.nav.personoversikt:kotlin-utils:$modiaCommonVersion")
     implementation("no.nav.personoversikt:ktor-utils:$modiaCommonVersion")
     implementation("no.nav.personoversikt:crypto:$modiaCommonVersion")
