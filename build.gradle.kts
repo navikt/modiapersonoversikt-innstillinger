@@ -11,6 +11,7 @@ val flywayVersion = "10.11.0"
 
 plugins {
     kotlin("jvm") version "1.9.23"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
     idea
 }
 
@@ -65,7 +66,7 @@ dependencies {
     implementation("no.nav.personoversikt:kotlin-utils:$modiaCommonVersion")
     implementation("no.nav.personoversikt:ktor-utils:$modiaCommonVersion")
     implementation("no.nav.personoversikt:crypto:$modiaCommonVersion")
-    implementation("org.flywaydb:flyway-core:$flywayVersion")
+    compileOnly("org.flywaydb:flyway-core:$flywayVersion")
     implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
     implementation("com.github.seratch:kotliquery:1.8.0")
 
@@ -83,18 +84,23 @@ tasks.withType<KotlinCompile> {
     kotlinOptions.freeCompilerArgs = listOf("-Xcontext-receivers")
 }
 
-task<Jar>("fatJar") {
-    archiveBaseName.set("app")
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE
-    manifest {
-        attributes["Main-Class"] = mainClass
-    }
-    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
-    with(tasks.jar.get() as CopySpec)
-}
-
 tasks {
+    shadowJar {
+        mergeServiceFiles {
+            setPath("META-INF/services/org.flywaydb.core.extensibility.Plugin")
+        }
+        archiveBaseName.set("app")
+        archiveClassifier.set("")
+        isZip64 = true
+        manifest {
+            attributes(
+                mapOf(
+                    "Main-Class" to mainClass,
+                ),
+            )
+        }
+    }
     "build" {
-        dependsOn("fatJar")
+        dependsOn("shadowJar")
     }
 }
