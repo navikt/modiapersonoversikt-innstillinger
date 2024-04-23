@@ -1,12 +1,9 @@
 package no.nav.modiapersonoversikt
 
-import com.typesafe.config.ConfigResolver
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import no.nav.vault.jdbc.hikaricp.HikariCPVaultUtil
 import org.flywaydb.core.Flyway
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import javax.sql.DataSource
 
 class DataSourceConfiguration(val env: Configuration) {
@@ -15,6 +12,20 @@ class DataSourceConfiguration(val env: Configuration) {
 
     fun userDataSource() = userDataSource
     fun adminDataSource() = adminDataSource
+
+    fun runFlyway() {
+        Flyway
+            .configure()
+            .dataSource(adminDataSource)
+            .also {
+                if (adminDataSource is HikariDataSource && (env.clusterName == "dev-fss" || env.clusterName == "prod-fss")) {
+                    val dbUser = dbRole(env.databaseConfig.dbName, "admin")
+                    it.initSql("SET ROLE '$dbUser'")
+                }
+            }
+            .load()
+            .migrate()
+    }
 
     private fun createDatasource(user: String): DataSource {
         val mountPath = env.databaseConfig.vaultMountpath
@@ -41,22 +52,5 @@ class DataSourceConfiguration(val env: Configuration) {
         )
     }
 
-    companion object {
-        private val log: Logger = LoggerFactory.getLogger(DataSourceConfiguration::class.java)
-        private fun dbRole(dbName: String, user: String): String = "$dbName-$user"
-
-        fun migrateDb(configuration: Configuration, dataSource: DataSource) {
-            Flyway
-                .configure()
-                .dataSource(dataSource)
-                .also {
-                    if (dataSource is HikariDataSource && !dataSource.jdbcUrl.contains(":h2:")) {
-                        val dbUser = dbRole(configuration.databaseConfig.dbName, "admin")
-                        it.initSql("SET ROLE '$dbUser'")
-                    }
-                }
-                .load()
-                .migrate()
-        }
-    }
+    private fun dbRole(dbName: String, user: String): String = "$dbName-$user"
 }
