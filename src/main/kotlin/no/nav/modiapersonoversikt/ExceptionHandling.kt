@@ -8,7 +8,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import org.slf4j.LoggerFactory
 
-private val log = LoggerFactory.getLogger("modiapersonoversikt-innstillinger.ExceptionHandler")
+private val exceptionLog = LoggerFactory.getLogger("modiapersonoversikt-innstillinger.ExceptionHandler")
 
 fun StatusPagesConfig.exceptionHandler() {
     exception<Throwable> { call, cause ->
@@ -40,14 +40,14 @@ private suspend inline fun ApplicationCall.logErrorAndRespond(
     lazyMessage: () -> String
 ) {
     val message = lazyMessage()
-    log.error(message, cause)
+    exceptionLog.error(message, cause)
     val response = HttpErrorResponse(
         url = this.request.url(),
         cause = cause.toString(),
         message = message,
         code = status
     )
-    log.error("Status Page Response: $response")
+    exceptionLog.error("Status Page Response: $response")
     this.respond(status, response)
 }
 
