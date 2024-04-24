@@ -45,6 +45,10 @@ class DataSourceConfiguration(val env: Configuration) {
             return HikariDataSource(config)
         }
 
+        if (env.clusterName == "dev-gcp" || env.clusterName == "prod-gcp") {
+            return HikariDataSource(config)
+        }
+
         return HikariCPVaultUtil.createHikariDataSourceWithVaultIntegration(
             config,
             mountPath,
