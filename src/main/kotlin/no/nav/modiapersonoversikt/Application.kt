@@ -15,9 +15,9 @@ import io.ktor.server.routing.*
 import no.nav.modiapersonoversikt.ObjectMapperProvider.Companion.objectMapper
 import no.nav.modiapersonoversikt.routes.settingsRoutes
 import no.nav.modiapersonoversikt.storage.JdbcStorageProvider
-import no.nav.personoversikt.ktor.utils.Metrics
-import no.nav.personoversikt.ktor.utils.Security
-import no.nav.personoversikt.ktor.utils.Selftest
+import no.nav.personoversikt.common.ktor.utils.Metrics
+import no.nav.personoversikt.common.ktor.utils.Security
+import no.nav.personoversikt.common.ktor.utils.Selftest
 import org.slf4j.event.Level
 import javax.sql.DataSource
 

@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt
 
 import io.ktor.server.netty.*
-import no.nav.personoversikt.ktor.utils.KtorServer
+import no.nav.personoversikt.common.ktor.utils.KtorServer
 import org.slf4j.LoggerFactory
 
 val log = LoggerFactory.getLogger("modiapersonoversikt-modiapersonoversikt-innstillinger.Application")
