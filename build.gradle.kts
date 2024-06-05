@@ -2,12 +2,12 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val mainClass = "no.nav.modiapersonoversikt.MainKt"
 val kotlinVersion = "2.0.0"
-val ktorVersion = "2.3.10"
-val prometheusVersion = "1.12.5"
+val ktorVersion = "2.3.11"
+val prometheusVersion = "1.13.0"
 val logbackVersion = "1.5.6"
 val logstashVersion = "7.4"
-val modiaCommonVersion = "1.2022.07.26-13.42-b5f759e4f887"
-val flywayVersion = "10.12.0"
+val modiaCommonVersion = "1.2024.05.31-12.22-e61d6fb8f19f"
+val flywayVersion = "10.14.0"
 
 plugins {
     kotlin("jvm") version "2.0.0"
@@ -63,9 +63,9 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashVersion")
     implementation("no.nav:vault-jdbc:1.3.10")
-    implementation("no.nav.personoversikt:kotlin-utils:$modiaCommonVersion")
-    implementation("no.nav.personoversikt:ktor-utils:$modiaCommonVersion")
-    implementation("no.nav.personoversikt:crypto:$modiaCommonVersion")
+    implementation("com.github.navikt.modia-common-utils:kotlin-utils:$modiaCommonVersion")
+    implementation("com.github.navikt.modia-common-utils:ktor-utils:$modiaCommonVersion")
+    implementation("com.github.navikt.modia-common-utils:crypto:$modiaCommonVersion")
     compileOnly("org.flywaydb:flyway-core:$flywayVersion")
     implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
     implementation("com.github.seratch:kotliquery:1.9.0")

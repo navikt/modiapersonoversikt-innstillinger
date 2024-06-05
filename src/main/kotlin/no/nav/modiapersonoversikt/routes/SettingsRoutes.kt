@@ -7,7 +7,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import no.nav.modiapersonoversikt.storage.StorageProvider
-import no.nav.personoversikt.ktor.utils.Security.SubjectPrincipal
+import no.nav.personoversikt.common.ktor.utils.Security.SubjectPrincipal
 
 fun Route.settingsRoutes(authproviders: Array<String?>, provider: StorageProvider) {
     authenticate(*authproviders) {

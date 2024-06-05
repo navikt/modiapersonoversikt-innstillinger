@@ -1,7 +1,7 @@
 package no.nav.modiapersonoversikt
 
 import io.ktor.server.netty.*
-import no.nav.personoversikt.ktor.utils.KtorServer
+import no.nav.personoversikt.common.ktor.utils.KtorServer
 
 fun runLocally(useMock: Boolean) {
     val configuration = Configuration()

@@ -1,10 +1,10 @@
 package no.nav.modiapersonoversikt
 
 import io.ktor.http.*
-import no.nav.personoversikt.ktor.utils.Security
-import no.nav.personoversikt.ktor.utils.Security.AuthProviderConfig
-import no.nav.personoversikt.utils.EnvUtils.getConfig
-import no.nav.personoversikt.utils.EnvUtils.getRequiredConfig
+import no.nav.personoversikt.common.ktor.utils.Security
+import no.nav.personoversikt.common.ktor.utils.Security.AuthProviderConfig
+import no.nav.personoversikt.common.utils.EnvUtils.getConfig
+import no.nav.personoversikt.common.utils.EnvUtils.getRequiredConfig
 
 private val defaultValues = mapOf(
     "NAIS_CLUSTER_NAME" to "local",
@@ -21,6 +21,7 @@ data class DatabaseConfig(
 
 class Configuration(
     val clusterName: String = getRequiredConfig("NAIS_CLUSTER_NAME", defaultValues),
+    val appContextpath: String = if (listOf("dev-gcp", "prod-gcp").contains(clusterName))  "" else "modiapersonoversikt-innstillinger",
     val azuread: AuthProviderConfig? =
         getConfig("AZURE_APP_WELL_KNOWN_URL", defaultValues)?.let { jwksurl ->
             AuthProviderConfig(

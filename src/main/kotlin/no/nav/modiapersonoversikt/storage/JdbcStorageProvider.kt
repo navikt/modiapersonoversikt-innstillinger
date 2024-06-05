@@ -5,7 +5,7 @@ import kotliquery.Session
 import kotliquery.queryOf
 import no.nav.modiapersonoversikt.model.UserSettings
 import no.nav.modiapersonoversikt.model.UserSettingsMap
-import no.nav.personoversikt.ktor.utils.Selftest
+import no.nav.personoversikt.common.utils.SelftestGenerator
 import java.time.LocalDateTime
 import javax.sql.DataSource
 import kotlin.concurrent.fixedRateTimer
@@ -15,7 +15,7 @@ private const val innstillingerTable = "innstillinger"
 private const val sistOppdatertTable = "sist_oppdatert"
 
 class JdbcStorageProvider(private val dataSource: DataSource) : StorageProvider {
-    private val selftest = Selftest.Reporter("Database", true)
+    private val selftest = SelftestGenerator.Reporter("Database", true)
 
     init {
         fixedRateTimer("Database check", daemon = true, initialDelay = 0, period = 10.seconds.inWholeMilliseconds) {
