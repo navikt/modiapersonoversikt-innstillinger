@@ -1,0 +1,9 @@
+services:
+  postgres:
+    image: postgres:15.0
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: sa
+      POSTGRES_PASSWORD: sa
+      POSTGRES_DB: "modiapersonoversikt-innstillinger"

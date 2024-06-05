@@ -21,6 +21,7 @@ data class DatabaseConfig(
 
 class Configuration(
     val clusterName: String = getRequiredConfig("NAIS_CLUSTER_NAME", defaultValues),
+    val appContextpath: String = if (listOf("dev-gcp", "prod-gcp").contains(clusterName))  "" else "modiapersonoversikt-innstillinger",
     val azuread: AuthProviderConfig? =
         getConfig("AZURE_APP_WELL_KNOWN_URL", defaultValues)?.let { jwksurl ->
             AuthProviderConfig(
