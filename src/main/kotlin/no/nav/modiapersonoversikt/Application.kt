@@ -43,12 +43,12 @@ fun Application.innstillingerApp(
     }
 
     install(Metrics.Plugin) {
-        contextpath = appContextpath
+        contextpath = configuration.appContextpath
     }
 
     install(Selftest.Plugin) {
         appname = appName
-        contextpath = appContextpath
+        contextpath = configuration.appContextpath
         version = appImage
     }
 
@@ -74,7 +74,7 @@ fun Application.innstillingerApp(
     val storageProvider = JdbcStorageProvider(dataSource)
 
     routing {
-        route(appContextpath) {
+        route(configuration.appContextpath) {
             route("/api") {
                 settingsRoutes(security.authproviders, storageProvider)
             }
