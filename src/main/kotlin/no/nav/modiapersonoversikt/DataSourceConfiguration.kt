@@ -2,7 +2,6 @@ package no.nav.modiapersonoversikt
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import no.nav.vault.jdbc.hikaricp.HikariCPVaultUtil
 import org.flywaydb.core.Flyway
 import javax.sql.DataSource
 
@@ -11,14 +10,13 @@ class DataSourceConfiguration(val env: Configuration) {
     private var adminDataSource = createDatasource("admin")
 
     fun userDataSource() = userDataSource
-    fun adminDataSource() = adminDataSource
 
     fun runFlyway() {
         Flyway
             .configure()
             .dataSource(adminDataSource)
             .also {
-                if (adminDataSource is HikariDataSource && (env.clusterName == "dev-fss" || env.clusterName == "prod-fss")) {
+                if (adminDataSource is HikariDataSource) {
                     val dbUser = dbRole(env.databaseConfig.dbName, "admin")
                     it.initSql("SET ROLE '$dbUser'")
                 }
@@ -28,7 +26,6 @@ class DataSourceConfiguration(val env: Configuration) {
     }
 
     private fun createDatasource(user: String): DataSource {
-        val mountPath = env.databaseConfig.vaultMountpath
         val config = HikariConfig()
         config.jdbcUrl = env.databaseConfig.jdbcUrl
         config.minimumIdle = 0
@@ -45,15 +42,7 @@ class DataSourceConfiguration(val env: Configuration) {
             return HikariDataSource(config)
         }
 
-        if (env.clusterName == "dev-gcp" || env.clusterName == "prod-gcp") {
-            return HikariDataSource(config)
-        }
-
-        return HikariCPVaultUtil.createHikariDataSourceWithVaultIntegration(
-            config,
-            mountPath,
-            dbRole(env.databaseConfig.dbName, user)
-        )
+        return HikariDataSource(config)
     }
 
     private fun dbRole(dbName: String, user: String): String = "$dbName-$user"
