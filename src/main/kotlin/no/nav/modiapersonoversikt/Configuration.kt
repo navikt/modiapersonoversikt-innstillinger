@@ -33,19 +33,10 @@ class Configuration(
                     ),
             )
         },
-    val databaseConfig: DatabaseConfig =
-        if (clusterName == "dev-gcp" || clusterName == "prod-gcp") {
-            DatabaseConfig(
-                jdbcUrl =
-                    getRequiredConfig(
-                        "NAIS_DATABASE_MODIAPERSONOVERSIKT_INNSTILLINGER_MODIAPERSONOVERSIKT_INNSTILLINGER_DB_JDBC_URL",
-                        defaultValues,
-                    ),
-            )
-        } else {
-            DatabaseConfig(
-                jdbcUrl = getRequiredConfig("DATABASE_JDBC_URL", defaultValues),
-                vaultMountpath = getRequiredConfig("VAULT_MOUNTPATH", defaultValues),
-            )
-        },
+    val databaseConfig: DatabaseConfig = DatabaseConfig(
+            jdbcUrl = getRequiredConfig(
+                "NAIS_DATABASE_MODIAPERSONOVERSIKT_INNSTILLINGER_MODIAPERSONOVERSIKT_INNSTILLINGER_DB_JDBC_URL",
+                defaultValues
+            ),
+        )
 )
