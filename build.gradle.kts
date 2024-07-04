@@ -72,6 +72,8 @@ dependencies {
 
     testRuntimeOnly("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
     testImplementation("com.h2database:h2:2.2.224")
+    testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
+    testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
 }
 
 java {

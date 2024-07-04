@@ -24,11 +24,14 @@ import javax.sql.DataSource
 fun Application.innstillingerApp(
     configuration: Configuration,
     dataSource: DataSource,
-    useMock: Boolean
+    useMock: Boolean,
 ) {
-    val security = Security(listOfNotNull(
-        configuration.azuread
-    ))
+    val security =
+        Security(
+            listOfNotNull(
+                configuration.azuread,
+            ),
+        )
 
     install(XForwardedHeaders)
     install(StatusPages) {
@@ -42,13 +45,10 @@ fun Application.innstillingerApp(
         allowMethod(HttpMethod.Delete)
     }
 
-    install(Metrics.Plugin) {
-        contextpath = configuration.appContextpath
-    }
+    install(Metrics.Plugin)
 
     install(Selftest.Plugin) {
         appname = appName
-        contextpath = configuration.appContextpath
         version = appImage
     }
 
@@ -67,17 +67,15 @@ fun Application.innstillingerApp(
     install(CallLogging) {
         level = Level.INFO
         disableDefaultColors()
-        filter { call -> call.request.path().startsWith("/modiapersonoversikt-innstillinger/api") }
+        filter { call -> call.request.path().startsWith("/api") }
         mdc("userId") { security.getSubject(it).joinToString(";") }
     }
 
     val storageProvider = JdbcStorageProvider(dataSource)
 
     routing {
-        route(configuration.appContextpath) {
-            route("/api") {
-                settingsRoutes(security.authproviders, storageProvider)
-            }
+        route("/api") {
+            settingsRoutes(security.authproviders, storageProvider)
         }
     }
 }
