@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt
 
 import io.ktor.http.ContentType
-import io.ktor.http.HttpMethod
 import io.ktor.serialization.jackson.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -37,12 +36,6 @@ fun Application.innstillingerApp(
     install(StatusPages) {
         notFoundHandler()
         exceptionHandler()
-    }
-
-    install(CORS) {
-        anyHost()
-        allowMethod(HttpMethod.Post)
-        allowMethod(HttpMethod.Delete)
     }
 
     install(Metrics.Plugin)
