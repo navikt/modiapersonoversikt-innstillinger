@@ -42,13 +42,10 @@ fun Application.innstillingerApp(
         allowMethod(HttpMethod.Delete)
     }
 
-    install(Metrics.Plugin) {
-        contextpath = configuration.appContextpath
-    }
+    install(Metrics.Plugin)
 
     install(Selftest.Plugin) {
         appname = appName
-        contextpath = configuration.appContextpath
         version = appImage
     }
 
@@ -74,10 +71,8 @@ fun Application.innstillingerApp(
     val storageProvider = JdbcStorageProvider(dataSource)
 
     routing {
-        route(configuration.appContextpath) {
-            route("/api") {
-                settingsRoutes(security.authproviders, storageProvider)
-            }
+        route("/api") {
+            settingsRoutes(security.authproviders, storageProvider)
         }
     }
 }
