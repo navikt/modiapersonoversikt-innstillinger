@@ -1,7 +1,6 @@
 package no.nav.modiapersonoversikt
 
 import io.ktor.http.ContentType
-import io.ktor.http.HttpMethod
 import io.ktor.serialization.jackson.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -24,22 +23,19 @@ import javax.sql.DataSource
 fun Application.innstillingerApp(
     configuration: Configuration,
     dataSource: DataSource,
-    useMock: Boolean
+    useMock: Boolean,
 ) {
-    val security = Security(listOfNotNull(
-        configuration.azuread
-    ))
+    val security =
+        Security(
+            listOfNotNull(
+                configuration.azuread,
+            ),
+        )
 
     install(XForwardedHeaders)
     install(StatusPages) {
         notFoundHandler()
         exceptionHandler()
-    }
-
-    install(CORS) {
-        anyHost()
-        allowMethod(HttpMethod.Post)
-        allowMethod(HttpMethod.Delete)
     }
 
     install(Metrics.Plugin)
@@ -64,7 +60,7 @@ fun Application.innstillingerApp(
     install(CallLogging) {
         level = Level.INFO
         disableDefaultColors()
-        filter { call -> call.request.path().startsWith("/modiapersonoversikt-innstillinger/api") }
+        filter { call -> call.request.path().startsWith("/api") }
         mdc("userId") { security.getSubject(it).joinToString(";") }
     }
 

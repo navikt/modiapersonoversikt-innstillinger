@@ -7,7 +7,7 @@ val prometheusVersion = "1.13.1"
 val logbackVersion = "1.5.6"
 val logstashVersion = "7.4"
 val modiaCommonVersion = "1.2024.06.26-10.11-d6295491fb9f"
-val flywayVersion = "10.15.0"
+val flywayVersion = "10.15.2"
 
 plugins {
     kotlin("jvm") version "2.0.0"
@@ -72,6 +72,8 @@ dependencies {
 
     testRuntimeOnly("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
     testImplementation("com.h2database:h2:2.2.224")
+    testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
+    testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
 }
 
 java {
