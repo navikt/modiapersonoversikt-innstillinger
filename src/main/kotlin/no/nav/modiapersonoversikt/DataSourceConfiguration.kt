@@ -15,12 +15,6 @@ class DataSourceConfiguration(val env: Configuration) {
         Flyway
             .configure()
             .dataSource(adminDataSource)
-            .also {
-                if (adminDataSource is HikariDataSource) {
-                    val dbUser = dbRole(env.databaseConfig.dbName, "admin")
-                    it.initSql("SET ROLE '$dbUser'")
-                }
-            }
             .load()
             .migrate()
     }
@@ -44,6 +38,4 @@ class DataSourceConfiguration(val env: Configuration) {
 
         return HikariDataSource(config)
     }
-
-    private fun dbRole(dbName: String, user: String): String = "$dbName-$user"
 }

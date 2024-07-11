@@ -10,7 +10,6 @@ private val defaultValues =
     mapOf(
         "NAIS_CLUSTER_NAME" to "local",
         "DATABASE_JDBC_URL" to "jdbc:h2:mem:modiapersonoversikt-innstillinger;MODE=PostgreSQL;DB_CLOSE_DELAY=-1",
-        "VAULT_MOUNTPATH" to "",
         "DB_NAME" to "modiapersonoversikt-innstillinger-pg15",
         "AZURE_APP_WELL_KNOWN_URL" to "localhost:6969",
     )
@@ -33,10 +32,18 @@ class Configuration(
                     ),
             )
         },
-    val databaseConfig: DatabaseConfig = DatabaseConfig(
-            jdbcUrl = getRequiredConfig(
-                "NAIS_DATABASE_MODIAPERSONOVERSIKT_INNSTILLINGER_MODIAPERSONOVERSIKT_INNSTILLINGER_DB_JDBC_URL",
-                defaultValues
-            ),
-        )
+    val databaseConfig: DatabaseConfig =
+        if (clusterName != "local") {
+            DatabaseConfig(
+                jdbcUrl =
+                getRequiredConfig(
+                    "NAIS_DATABASE_MODIAPERSONOVERSIKT_INNSTILLINGER_MODIAPERSONOVERSIKT_INNSTILLINGER_DB_JDBC_URL",
+                    defaultValues,
+                ),
+            )
+        } else {
+            DatabaseConfig(
+                jdbcUrl = getRequiredConfig("DATABASE_JDBC_URL", defaultValues),
+            )
+        },
 )
