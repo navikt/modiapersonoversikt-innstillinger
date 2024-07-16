@@ -71,7 +71,7 @@ dependencies {
     implementation("com.github.seratch:kotliquery:1.9.0")
 
     testRuntimeOnly("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
-    testImplementation("com.h2database:h2:2.2.224")
+    testImplementation("com.h2database:h2:2.3.230")
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
 }
