@@ -53,6 +53,9 @@ spec:
         - application: modiapersonoversikt
           namespace: personoversikt
           cluster: prod-gcp
+        - application: modiapersonoversikt
+          namespace: personoversikt
+          cluster: prod-fss
   env:
     - name: DB_NAME
       value: "modiapersonoversikt-innstillinger-db"
