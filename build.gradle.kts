@@ -2,16 +2,16 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val mainClass = "no.nav.modiapersonoversikt.MainKt"
 val kotlinVersion = "2.0.21"
-val ktorVersion = "2.3.12"
+val ktorVersion = "3.0.0"
 val prometheusVersion = "1.13.6"
 val logbackVersion = "1.5.10"
 val logstashVersion = "8.0"
-val modiaCommonVersion = "1.2024.10.08-15.26-79dda7914471"
+val modiaCommonVersion = "1.2024.10.15-08.58-ff5db0c77a01"
 val flywayVersion = "10.19.0"
 
 plugins {
     kotlin("jvm") version "2.0.21"
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("com.gradleup.shadow") version "8.3.3"
     idea
 }
 
@@ -77,12 +77,12 @@ dependencies {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "17"
+    kotlinOptions.jvmTarget = "21"
     kotlinOptions.freeCompilerArgs = listOf("-Xcontext-receivers")
 }
 
