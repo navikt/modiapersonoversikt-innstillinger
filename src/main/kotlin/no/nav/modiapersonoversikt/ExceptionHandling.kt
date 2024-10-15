@@ -28,8 +28,9 @@ fun StatusPagesConfig.notFoundHandler() {
             HttpStatusCode.NotFound,
             HttpErrorResponse(
                 message = "The page or operation requested does not exist.",
-                code = HttpStatusCode.NotFound, url = call.request.url()
-            )
+                code = HttpStatusCode.NotFound,
+                url = call.request.url(),
+            ),
         )
     }
 }
@@ -37,16 +38,17 @@ fun StatusPagesConfig.notFoundHandler() {
 private suspend inline fun ApplicationCall.logErrorAndRespond(
     cause: Throwable,
     status: HttpStatusCode = HttpStatusCode.InternalServerError,
-    lazyMessage: () -> String
+    lazyMessage: () -> String,
 ) {
     val message = lazyMessage()
     exceptionLog.error(message, cause)
-    val response = HttpErrorResponse(
-        url = this.request.url(),
-        cause = cause.toString(),
-        message = message,
-        code = status
-    )
+    val response =
+        HttpErrorResponse(
+            url = this.request.url(),
+            cause = cause.toString(),
+            message = message,
+            code = status,
+        )
     exceptionLog.error("Status Page Response: $response")
     this.respond(status, response)
 }
@@ -55,13 +57,14 @@ internal data class HttpErrorResponse(
     val url: String,
     val message: String? = null,
     val cause: String? = null,
-    val code: HttpStatusCode = HttpStatusCode.InternalServerError
+    val code: HttpStatusCode = HttpStatusCode.InternalServerError,
 )
 
 internal fun ApplicationRequest.url(): String {
-    val port = when (origin.port) {
-        in listOf(80, 443) -> ""
-        else -> ":${origin.port}"
-    }
-    return "${origin.scheme}://${origin.host}$port${origin.uri}"
+    val port =
+        when (origin.serverPort) {
+            in listOf(80, 443) -> ""
+            else -> ":${origin.serverPort}"
+        }
+    return "${origin.scheme}://${origin.serverHost}$port${origin.uri}"
 }
