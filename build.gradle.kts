@@ -7,7 +7,7 @@ val prometheusVersion = "1.15.0"
 val logbackVersion = "1.5.18"
 val logstashVersion = "8.1"
 val modiaCommonVersion = "1.2025.04.30-09.28-51d075572764"
-val flywayVersion = "11.8.0"
+val flywayVersion = "11.8.2"
 
 plugins {
     kotlin("jvm") version "2.1.21"
