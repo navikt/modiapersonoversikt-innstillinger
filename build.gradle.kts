@@ -10,7 +10,7 @@ val modiaCommonVersion = "1.2025.07.23-07.40-7ea9c01d168f"
 val flywayVersion = "11.11.2"
 
 plugins {
-    kotlin("jvm") version "2.1.21"
+    kotlin("jvm") version "2.2.10"
     id("com.gradleup.shadow") version "8.3.9"
     idea
 }
