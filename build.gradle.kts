@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val mainClass = "no.nav.modiapersonoversikt.MainKt"
@@ -10,7 +11,7 @@ val modiaCommonVersion = "1.2025.08.20-10.02-d99e24c2fbbe"
 val flywayVersion = "11.12.0"
 
 plugins {
-    kotlin("jvm") version "2.1.21"
+    kotlin("jvm") version "2.2.20"
     id("com.gradleup.shadow") version "8.3.9"
     idea
 }
@@ -82,8 +83,8 @@ java {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "21"
-    kotlinOptions.freeCompilerArgs = listOf("-Xcontext-receivers")
+    compilerOptions.jvmTarget.set(JvmTarget.JVM_21)
+    compilerOptions.freeCompilerArgs.set(listOf("-Xcontext-receivers"))
 }
 
 tasks {
