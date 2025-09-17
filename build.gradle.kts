@@ -12,7 +12,7 @@ val flywayVersion = "11.13.0"
 
 plugins {
     kotlin("jvm") version "2.2.20"
-    id("com.gradleup.shadow") version "8.3.9"
+    id("com.gradleup.shadow") version "9.1.0"
     idea
 }
 
