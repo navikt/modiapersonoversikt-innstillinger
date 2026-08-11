@@ -1,11 +1,5 @@
-FROM gradle:8-jdk21 as builder
-
-ADD / /source
-WORKDIR /source
-RUN ./gradlew build
-
 FROM gcr.io/distroless/java21-debian12
 
-COPY --from=builder /source/build/libs/app.jar app.jar
+COPY build/install/modiapersonoversikt-innstillinger/lib /lib
 
-CMD ["app.jar"]
+ENTRYPOINT ["java", "-cp", "/lib/*", "no.nav.modiapersonoversikt.MainKt"]

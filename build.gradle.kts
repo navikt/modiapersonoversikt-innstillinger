@@ -1,7 +1,6 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val mainClass = "no.nav.modiapersonoversikt.MainKt"
 val kotlinVersion = "2.4.10"
 val ktorVersion = "3.5.2"
 val prometheusVersion = "1.17.0"
@@ -12,7 +11,7 @@ val flywayVersion = "13.1.0"
 
 plugins {
     kotlin("jvm") version "2.3.0"
-    id("com.gradleup.shadow") version "8.3.9"
+    application
     idea
 }
 
@@ -67,7 +66,7 @@ dependencies {
     implementation("com.github.navikt.modia-common-utils:kotlin-utils:$modiaCommonVersion")
     implementation("com.github.navikt.modia-common-utils:ktor-utils:$modiaCommonVersion")
     implementation("com.github.navikt.modia-common-utils:crypto:$modiaCommonVersion")
-    compileOnly("org.flywaydb:flyway-core:$flywayVersion")
+    implementation("org.flywaydb:flyway-core:$flywayVersion")
     implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
     implementation("com.github.seratch:kotliquery:1.9.1")
 
@@ -87,23 +86,3 @@ tasks.withType<KotlinCompile> {
     compilerOptions.freeCompilerArgs.set(listOf("-Xcontext-receivers"))
 }
 
-tasks {
-    shadowJar {
-        mergeServiceFiles {
-            setPath("META-INF/services/org.flywaydb.core.extensibility.Plugin")
-        }
-        archiveBaseName.set("app")
-        archiveClassifier.set("")
-        isZip64 = true
-        manifest {
-            attributes(
-                mapOf(
-                    "Main-Class" to mainClass,
-                ),
-            )
-        }
-    }
-    "build" {
-        dependsOn("shadowJar")
-    }
-}
