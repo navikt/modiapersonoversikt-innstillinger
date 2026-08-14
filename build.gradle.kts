@@ -83,6 +83,5 @@ java {
 
 tasks.withType<KotlinCompile> {
     compilerOptions.jvmTarget.set(JvmTarget.JVM_21)
-    compilerOptions.freeCompilerArgs.set(listOf("-Xcontext-receivers"))
 }
 
