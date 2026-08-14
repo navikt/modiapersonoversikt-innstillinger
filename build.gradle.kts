@@ -10,7 +10,7 @@ val modiaCommonVersion = "1.2026.08.06-12.11-d922f6248916"
 val flywayVersion = "13.2.0"
 
 plugins {
-    kotlin("jvm") version "2.3.0"
+    kotlin("jvm") version "2.4.10"
     application
     idea
 }
@@ -83,6 +83,5 @@ java {
 
 tasks.withType<KotlinCompile> {
     compilerOptions.jvmTarget.set(JvmTarget.JVM_21)
-    compilerOptions.freeCompilerArgs.set(listOf("-Xcontext-receivers"))
 }
 
