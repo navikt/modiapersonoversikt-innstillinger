@@ -8,6 +8,8 @@ val logbackVersion = "1.6.3"
 val logstashVersion = "9.0"
 val modiaCommonVersion = "1.2026.08.06-12.11-d922f6248916"
 val flywayVersion = "13.7.0"
+val hikariVersion = "5.0.1"
+val postgresVersion = "42.7.14"
 
 plugins {
     kotlin("jvm") version "2.4.20"
@@ -62,10 +64,11 @@ dependencies {
 
     implementation("ch.qos.logback:logback-classic:$logbackVersion")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashVersion")
-    implementation("no.nav:vault-jdbc:1.3.10")
     implementation("com.github.navikt.modia-common-utils:kotlin-utils:$modiaCommonVersion")
     implementation("com.github.navikt.modia-common-utils:ktor-utils:$modiaCommonVersion")
     implementation("com.github.navikt.modia-common-utils:crypto:$modiaCommonVersion")
+    implementation("com.zaxxer:HikariCP:$hikariVersion")
+    runtimeOnly("org.postgresql:postgresql:$postgresVersion")
     implementation("org.flywaydb:flyway-core:$flywayVersion")
     implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
     implementation("com.github.seratch:kotliquery:1.9.1")
@@ -84,4 +87,3 @@ java {
 tasks.withType<KotlinCompile> {
     compilerOptions.jvmTarget.set(JvmTarget.JVM_21)
 }
-
