@@ -3,9 +3,26 @@ updates:
   - package-ecosystem: gradle
     directory: "/"
     schedule:
-      interval: daily
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: "Europe/Oslo"
+    open-pull-requests-limit: 5
+    registries:
+      - github-packages
+    groups:
+      gradle-dependencies:
+        patterns:
+          - "*"
 
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: daily
+
+registries:
+  github-packages:
+    type: maven-repository
+    url: https://maven.pkg.github.com/navikt/maven-release
+    username: x-access-token
+    password: ${{ secrets.READER_TOKEN }}
