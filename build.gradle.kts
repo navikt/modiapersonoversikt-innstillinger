@@ -48,6 +48,8 @@ idea {
 dependencies {
     constraints {
         implementation("com.google.guava:guava:33.8.0-jre")
+        implementation("tools.jackson.core:jackson-core:3.3.0")
+        implementation("tools.jackson.core:jackson-databind:3.3.0")
     }
 
     implementation(kotlin("stdlib"))
