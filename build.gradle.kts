@@ -3,11 +3,11 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val kotlinVersion = "2.4.21"
 val ktorVersion = "3.6.1"
-val prometheusVersion = "1.17.2"
-val logbackVersion = "1.6.6"
+val prometheusVersion = "1.18.0"
+val logbackVersion = "1.6.8"
 val logstashVersion = "9.0"
 val modiaCommonVersion = "1.2026.08.06-12.11-d922f6248916"
-val flywayVersion = "13.12.2"
+val flywayVersion = "13.13.0"
 val hikariVersion = "7.1.0"
 val postgresVersion = "42.7.14"
 
