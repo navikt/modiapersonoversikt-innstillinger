@@ -36,7 +36,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew build installDist
       - name: Publish Docker image
-        uses: nais/docker-build-push@bfe52e3ad6d0e96fd1056a03acb7b619aaffb39d # v0
+        uses: nais/docker-build-push@bfbdd06e303c63a7d697da6f391ffc6b81f60db2 # v0
         id: docker-build-push
         with:
           team: personoversikt
@@ -54,7 +54,7 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: nais/deploy/actions/deploy@6a9dcd6df697ec2d38edc78cadb0b9acd1232f50 # v3
+      - uses: nais/deploy/actions/deploy@427e29c94d911626a023a76f402f6dcae1f840b7 # v3
         env:
           PRINT_PAYLOAD: true
           CLUSTER: dev-gcp
